@@ -143,16 +143,16 @@ class pySorter:
             if(exists and not is_dir):
                 raise OSError("File {0} exists, but is not a directory".replace("{0}", path))
     
+    def path_to_unix(self, path):
+        path = path.replace('\\','/').strip()
+        return path
+    
     def path_base_dir(self, path):
         index = path.find("/",1)
         if(index < 0):
             return path
         else:
             return path[:index]
-        
-    def path_to_unix(self, path):
-        path = path.replace('\\','/').strip()
-        return path
     
     def formatter(self, string, *data):
         None
@@ -196,13 +196,13 @@ class pySorter:
 
 def read_filetype_file(afile):
     import re
-    pattern = re.compile(r'(.*?)\$(.*?)\s+')
+    pattern = re.compile(r'(?!#)(.*?)\$(.*)')
     infile = open(afile)
     data = infile.read(-1)
     filetypes_dict = {}
     for i in pattern.findall(data):
         if(not i[0]=="" and not i[1]==""):
-            filetypes_dict[i[0]]=i[1]
+            filetypes_dict[i[0].strip()]=i[1].strip()
     return filetypes_dict
 
 def add_args(parser):
@@ -243,6 +243,7 @@ def write_unknown(iterable, path):
         for i in iterable:
             afile.write(i)
             afile.write('\n')
+
 if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Sort Files in a directory according to their file type')
