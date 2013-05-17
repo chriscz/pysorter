@@ -1,0 +1,88 @@
+3gp$Videos/3GPs
+7z$Archives
+a2w$Alice Projects
+ace$Archives
+adr$Opera/AddressBook Backups
+amr$Sounds/AMRs
+asb$Hymn Assembler Saves
+aswcs$Avast/Themes
+aup$Audacity Projects
+avi$Videos/AVIs
+bmp$Images/Bitmaps
+bwg$Brain Wave Generator Projects
+bz2$Archives
+cab$Archives
+cdr$Corel/Draw
+cer$Certificates
+dbr$Deep Burner Projects
+deb$Installers/Linux/Debian
+diz$Documents/iNFOs
+doc$Documents/Writing
+download$Other
+exe$Installers/Windows/
+flv$Videos/Flash/FLVs
+flv$Videos/FLVs
+gif$Images/GIFs
+gmx$Games/AOE Saved Games
+gz$Archives
+hid$Sony Ericsson HIDs
+html$Saved Websites
+htm$Saved Websites
+ico$Images/Icons
+inf$Configuration Files/INF files
+ini$Configuration Files/INI files
+iso$Disc Images/ISOs
+jad$JavaME/JADs
+jar$JavaME/JARs
+java$JavaSE/Source
+jpeg$Images/JPGs
+jpg$Images/JPGs
+lnk$Shortcuts
+m3u$Sounds/M3Us
+mht$Saved Websites
+midi$Sounds/MIDIs
+mid$Sounds/MIDIs
+mid$Sounds/MIDIs
+mp3$Sounds/MP3s
+mp4$Videos/MP4s
+msi$Installers/Windows/MSI
+mxm$Mxit Msgs
+nfo$Documents/iNFOs
+odb$Documents/Databases
+ods$Documents/Spreadsheets
+odt$Documents/Writing
+ogg$Sounds/OGGs
+omb$Cellphone/Opera MINI Saves
+oms$Cellphone/Opera MINI Saves
+p2p$PeerGuardian/Lists
+pdf$PDF files
+png$Images/PNGs
+pps$Documents/Presentations
+ppt$Documents/Presentations
+py$Python/Scripts
+rar$Archives
+reg$Registry files
+rtf$Documents/RTFs
+sbk$Scrapbook
+sis$Symbian
+svg$Images/SVGs
+swf$Flash/SWFs
+tar$Archives
+tbs$TuneUP/Boot Screen
+thm$Cellphone/Themes
+tif$Images/TIFs
+torrent$Torrents
+ttf$Fonts/True Type
+txt$Text files
+url$Internet Links
+vcf$Cellphone/Contacts
+vcs$Virtual Calendar
+vkp$Sony Ericsson/Patches
+vol$Virtual Encrypted Disk
+wav$Sounds/WAVs
+wmv$Videos/WMVs
+xcf$Images/XCFs
+xls$Documents/Spreadsheets
+xml$XML files
+xpi$Firefox/Extensions
+zip$Archives
