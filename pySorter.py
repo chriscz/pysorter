@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Copyright 2013 Chris Coetzee (chriscz93@gmail.com)
 # You may redistribute this file as long as the distribution complies with below license.
@@ -26,44 +27,44 @@ class pySorter:
     def __init__(self, path, file_types, recursive=False, unknown_suffix=" files",
                 move_directories="Directories", other_files="Other", clean_empty_dirs=False):
         '''TODO'''
-        self.PATH = self.path_to_unix(os.path.abspath(path))
+        self.PATH = path_to_unix(os.path.abspath(path))
         if(not os.path.isdir(path)):
             error(1, "[Error] Invalid directory")
         
         self.CLEAN = clean_empty_dirs
         self.RECURSIVE = recursive
         self.UNKNOWN_SUFFIX = unknown_suffix
-        self.DIRECTORIES_TO = self.path_join(self.PATH, move_directories)
-        self.OTHER_FILES_TO = self.path_join(self.PATH, other_files)
+        self.DIRECTORIES_TO = path_join(self.PATH, move_directories)
+        self.OTHER_FILES_TO = path_join(self.PATH, other_files)
         self.types = file_types
         self.unknown = set()
         
         self.TOP_LEVEL_DIRS = set()
-        self.TOP_LEVEL_DIRS.add(self.path_base_dir(move_directories))
+        self.TOP_LEVEL_DIRS.add(path_base_dir(move_directories))
         
-        self.TOP_LEVEL_DIRS.add(self.path_base_dir(other_files))
+        self.TOP_LEVEL_DIRS.add(path_base_dir(other_files))
         for i in self.types.keys():
-            self.TOP_LEVEL_DIRS.add(self.path_base_dir(self.types[i]))
+            self.TOP_LEVEL_DIRS.add(path_base_dir(self.types[i]))
         
-        self.make_path(self.DIRECTORIES_TO)
-        self.make_path(self.OTHER_FILES_TO)
+        self.make_path(path_to_unix(self.DIRECTORIES_TO))
+        self.make_path(path_to_unix(self.OTHER_FILES_TO))
         
     def sort(self):
         top_dirs = []
         for path, top_dirs, files in os.walk(self.PATH):
             for file in files:
-                fullpath = self.path_join(path, file)
+                fullpath = path_join(path, file)
                 self.sort_file(fullpath)
             break
         
         for i in top_dirs:
             if(i in self.TOP_LEVEL_DIRS):
                 continue
-            dir_path = self.path_join(self.PATH, i)
+            dir_path = path_join(self.PATH, i)
             if(self.RECURSIVE):
                 for path, dirs, files in os.walk(dir_path):
                     for file in files:
-                        fullpath = self.path_join(path, file)
+                        fullpath = path_join(path, file)
                         self.sort_file(fullpath)
             else:
                 self.sort_dir(i)
@@ -71,15 +72,15 @@ class pySorter:
             self.clean_empty_dirs()
                 
     def sort_dir(self, dir):
-        frm = self.path_join(self.PATH, dir)
-        to = self.path_join(self.DIRECTORIES_TO, dir)
+        frm = path_join(self.PATH, dir)
+        to = path_join(self.DIRECTORIES_TO, dir)
         if(os.path.exists(to)):
             #print("Directory exists: {0}".replace('{0}', to))            
             return
         shutil.move(frm, self.DIRECTORIES_TO)
         
     def sort_file(self, path):
-        listing = self.split_extension(path)
+        listing = split_extension(path)
         fullname = listing[1]
         has_extension = listing[2]!= ""
         
@@ -90,11 +91,11 @@ class pySorter:
             return
 
         if(self.types.has_key(listing[2].lower())):
-            to = self.path_join(self.PATH, self.types[listing[2].lower()], fullname)
+            to = path_join(self.PATH, self.types[listing[2].lower()], fullname)
         elif(not has_extension):
             to = self.OTHER_FILES_TO
         else:
-            to = self.path_join(self.OTHER_FILES_TO, listing[2].upper() + self.UNKNOWN_SUFFIX, fullname)
+            to = path_join(self.OTHER_FILES_TO, listing[2].upper() + self.UNKNOWN_SUFFIX, fullname)
             self.unknown.add(listing[2].lower())
             
         if(has_extension and os.path.exists(to)):
@@ -125,13 +126,16 @@ class pySorter:
         if(os.path.isdir(in_path)):
             return
         #print("[ToMake]: " + in_path)
-        if(not in_path.startswith("/")):
-            raise OSError("Path , {0}, is not absolute".replace("{0}", path))
+        #if(not in_path.startswith("/")):
+        #    raise OSError("Path , {0}, is not absolute".replace("{0}", path))
         parts = in_path.split('/')
         if(not end_is_a_dir):
             parts = parts[:-1]
+        #Remove an empty startrm -r 
+        if(parts[0]==''):
+            parts = parts[1:]
         for i in parts:
-            path = self.path_join(path, i)
+            path = path_join(path, i)
             exists = os.path.exists(path)
             is_dir = os.path.isdir(path)
             if(not exists):
@@ -142,67 +146,57 @@ class pySorter:
                 continue
             if(exists and not is_dir):
                 raise OSError("File {0} exists, but is not a directory".replace("{0}", path))
-    
-    def path_to_unix(self, path):
-        path = path.replace('\\','/').strip()
+
+def path_to_unix(path):
+    path = path.replace('\\','/').strip()
+    return path
+
+def path_base_dir(path):
+    index = path.find("/",1)
+    if(index < 0):
         return path
+    else:
+        return path[:index]
+
+def formatter(string, *data):
+    None
+
+def path_join(*path):
+    if(path[0] == '' and path[1]==''):
+        raise Exception
+    print path
+    return os.path.join(*path)
     
-    def path_base_dir(self, path):
-        index = path.find("/",1)
-        if(index < 0):
-            return path
-        else:
-            return path[:index]
+def split_extension(filename):
+    period = filename.rfind('.')
+    slash = filename.rfind('/')
     
-    def formatter(self, string, *data):
-        None
+    path, name, extension = '','',''
     
-    def path_join(self, *path):
-        final = self.path_to_unix(path[0])
-        ends_in_slash = self.path_to_unix(path[-1]).endswith("/")
-        if(not final.endswith('/')): 
-            final += '/'
-        for i in range(1,len(path)):
-            j = self.path_to_unix(path[i])
-            if(j.startswith('/')):
-                j = j[1:]
-            if (not j.endswith('/')): 
-                j += '/'
-            final+=j
-        if(ends_in_slash):
-            return final
-        return final[:-1]
-        
-    def split_extension(self, filename):
-        period = filename.rfind('.')
-        slash = filename.rfind('/')
-        
-        path, name, extension = '','',''
-        
-        if slash > 0 and period < 0:
-            path = filename[:slash+1]
-            name = filename[slash+1:]
-        elif slash < 0 and period >0:
-            name = filename[:period]
-            extension = filename[period+1:]
-        elif slash < 0 and period < 0:
-            name = filename
-        elif slash > 0 and period > 0:
-            path = filename[:slash+1]
-            name = filename[slash+1:period]
-            extension = filename[period+1:]
-        return path, name, extension
+    if slash > 0 and period < 0:
+        path = filename[:slash+1]
+        name = filename[slash+1:]
+    elif slash < 0 and period >0:
+        name = filename[:period]
+        extension = filename[period+1:]
+    elif slash < 0 and period < 0:
+        name = filename
+    elif slash > 0 and period > 0:
+        path = filename[:slash+1]
+        name = filename[slash+1:period]
+        extension = filename[period+1:]
+    return path, name, extension
 
 
 def read_filetype_file(afile):
     import re
-    pattern = re.compile(r'(?!#)(.*?)\$(.*)')
+    pattern = re.compile(r'(?!#)(.*?)\s+\$(.*)(?<!\s)')
     infile = open(afile)
     data = infile.read(-1)
     filetypes_dict = {}
     for i in pattern.findall(data):
         if(not i[0]=="" and not i[1]==""):
-            filetypes_dict[i[0].strip()]=i[1].strip()
+            filetypes_dict[i[0]]=i[1]
     return filetypes_dict
 
 def add_args(parser):
@@ -217,9 +211,9 @@ def add_args(parser):
 
 
 def parse(args):
-    path = os.path.abspath(__file__).replace('\\','/').split('/')
-    script_dir = '/' 
-    for i in range(1,len(path)-1):
+    path = path_to_unix(os.path.abspath(__file__)).split("/")
+    script_dir = ''
+    for i in range(0,len(path)-1):
         script_dir += path[i] + '/'
     #start testing
     filetypes = script_dir + "filetypes.txt"
@@ -259,6 +253,8 @@ if __name__=="__main__":
         to_pass['other_files'] = args.other_files
     if(args.clean):
         to_pass['clean_empty_dirs'] = True
+    print(args.directory)
+    print(args.filetypes)
     sorter = pySorter(args.directory, read_filetype_file(args.filetypes),**to_pass)
     sorter.sort()
     if(args.unknown_filetypes):
