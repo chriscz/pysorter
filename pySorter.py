@@ -4,7 +4,7 @@
 # You may redistribute this file as long as the distribution complies with below license.
 # Furthermore, you are required to mention the author and the source homepage in your application
 #
-# Version 4.0.1 (Alpha)
+# Version 4.0.2 (Alpha)
 #
 #    pySorter is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ class pySorter:
         listing = split_extension(path)
         fullname = listing[1]
         has_extension = listing[2]!= ""
-        print("[sortFile]: " + path)
+        #print("[sortFile]: " + path)
         if(has_extension):
             fullname = listing[1]+'.'+listing[2]
         if(listing[1]=='' and not has_extension):
@@ -123,7 +123,7 @@ class pySorter:
         '''Takes a standard UNIX path and creates neccesary directories'''
         if(os.path.isdir(in_path)):
             return
-        print("[ToMakeStart]: " + in_path)
+        #print("[ToMakeStart]: " + in_path)
         #if(not in_path.startswith("/")):
         #    raise OSError("Path , {0}, is not absolute".replace("{0}", path))
         parts = in_path.split('/')
@@ -136,13 +136,13 @@ class pySorter:
             
         parts = parts[1:]
         for i in parts:
-            print("  >[ToMakeParts]: " + path)
+            #print("  >[ToMakeParts]: " + path)
             path = path_join(path, i)
             exists = os.path.exists(path)
             is_dir = os.path.isdir(path)
             if(not exists):
                 os.mkdir(path)
-                print('[MkDir]: '+ path)
+                #print('[MkDir]: '+ path)
                 continue
             if(is_dir):
                 continue
@@ -154,7 +154,7 @@ def path_to_unix(path):
     return path
 
 def path_base_dir(path):
-    print("[pathBaseDir] "+ path)
+    #print("[pathBaseDir] "+ path)
     index = path.find("/",1)
     if(index < 0):
         return path
@@ -165,14 +165,12 @@ def formatter(string, *data):
     None
 
 def path_join(*path):
-    if(path[0] == '' and path[1]==''):
-        raise Exception
-    print "[pathJoinStart]: ", path
-    osp = os.path.join(*path)
-    print("  >[pathJoinAsByOs]: " + osp)
-    unix_path = path_to_unix(osp)
-    print("  >[pathJoinToUnix]: " + unix_path)
-    return unix_path
+    final = ''
+    for i in path:
+        i = i.replace("\\",'/')
+        final += i + '/'
+    final = final.replace("//","/")
+    return final[:-1]
     
 def split_extension(filename):
     period = filename.rfind('.')
