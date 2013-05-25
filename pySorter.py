@@ -30,7 +30,6 @@ class pySorter:
         self.PATH = path_to_unix(os.path.abspath(path))
         if(not os.path.isdir(path)):
             error(1, "[Error] Invalid directory")
-        
         self.CLEAN = clean_empty_dirs
         self.RECURSIVE = recursive
         self.UNKNOWN_SUFFIX = unknown_suffix
@@ -83,7 +82,7 @@ class pySorter:
         listing = split_extension(path)
         fullname = listing[1]
         has_extension = listing[2]!= ""
-        
+        print("[sortFile]: " + path)
         if(has_extension):
             fullname = listing[1]+'.'+listing[2]
         if(listing[1]=='' and not has_extension):
@@ -122,25 +121,28 @@ class pySorter:
     
     def make_path(self, in_path,end_is_a_dir=True):
         '''Takes a standard UNIX path and creates neccesary directories'''
-        path = ""
         if(os.path.isdir(in_path)):
             return
-        #print("[ToMake]: " + in_path)
+        print("[ToMakeStart]: " + in_path)
         #if(not in_path.startswith("/")):
         #    raise OSError("Path , {0}, is not absolute".replace("{0}", path))
         parts = in_path.split('/')
         if(not end_is_a_dir):
             parts = parts[:-1]
-        #Remove an empty startrm -r 
+        #Do this in case of windows starting with a drive letter not a /
+        path = parts[0]
         if(parts[0]==''):
-            parts = parts[1:]
+            path = '/'
+            
+        parts = parts[1:]
         for i in parts:
+            print("  >[ToMakeParts]: " + path)
             path = path_join(path, i)
             exists = os.path.exists(path)
             is_dir = os.path.isdir(path)
             if(not exists):
                 os.mkdir(path)
-                #print('[MkDir]: '+ path)
+                print('[MkDir]: '+ path)
                 continue
             if(is_dir):
                 continue
@@ -152,6 +154,7 @@ def path_to_unix(path):
     return path
 
 def path_base_dir(path):
+    print("[pathBaseDir] "+ path)
     index = path.find("/",1)
     if(index < 0):
         return path
@@ -164,8 +167,12 @@ def formatter(string, *data):
 def path_join(*path):
     if(path[0] == '' and path[1]==''):
         raise Exception
-    print path
-    return os.path.join(*path)
+    print "[pathJoinStart]: ", path
+    osp = os.path.join(*path)
+    print("  >[pathJoinAsByOs]: " + osp)
+    unix_path = path_to_unix(osp)
+    print("  >[pathJoinToUnix]: " + unix_path)
+    return unix_path
     
 def split_extension(filename):
     period = filename.rfind('.')
@@ -190,7 +197,7 @@ def split_extension(filename):
 
 def read_filetype_file(afile):
     import re
-    pattern = re.compile(r'(?!#)(.*?)\s+\$(.*)(?<!\s)')
+    pattern = re.compile(r'(?!#)\s*(.*?)\s*\$(.*)(?<!\s)')
     infile = open(afile)
     data = infile.read(-1)
     filetypes_dict = {}
@@ -253,8 +260,6 @@ if __name__=="__main__":
         to_pass['other_files'] = args.other_files
     if(args.clean):
         to_pass['clean_empty_dirs'] = True
-    print(args.directory)
-    print(args.filetypes)
     sorter = pySorter(args.directory, read_filetype_file(args.filetypes),**to_pass)
     sorter.sort()
     if(args.unknown_filetypes):
