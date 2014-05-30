@@ -2,7 +2,7 @@ a2w$Alice Projects
 gz$Archives
 ace$Archives
 zip$Archives
-cab$Archives
+cab$Archives/WindowsCab
 tar$Archives
 rar$Archives
 7z$Archives
@@ -12,31 +12,58 @@ jar$Archives/Jars
 #<PROJECTS>
 
 aup$Projects/Audacity Projects
+bwg$Projects/Brain Wave Generator Projects
+sbk$Projects/Scrapbook Factory
+cdr$Projects/Corel
 
 #<AUDIO FORMATS>
 
-mp3$Audio/MP3s
-amr$Audio/AMRs
-midi$Audio/MIDIs
+mp3$Audio/
+amr$Audio/AMR
 m3u$Audio/PlayList
-wav$Audio/WAVs
-ogg$Audio/OGGs
-mid$Audio/MIDIs
+wav$Audio/
+ogg$Audio/
+midi$Audio/MIDI
+mid$Audio/MIDI
+wma$Audio/
+flac$Audio/
+m4a$Audio/
+m4r$Audio/
+mp2$Audio/
 
-wma$Audio/WMAs
-aswcs$Avast/Themes
-bwg$Brain Wave Generator Projects
-vcf$Contacts
-cer$Certificates
-ini$Configuration Files/INI files
-inf$Configuration Files/INF files
-cdr$Corel/Draw
-dat$Data Files/
-csv$Data Files/
-iso$Disc Images/ISOs
+#<VIDEO FORMATS>
+mp4$Videos/
+wmv$Videos/
+flv$Videos/Flash
+avi$Videos/
+3gp$Videos/3GP
+swf$Flash/SWF
+m2ts$Videos/
+m1v$Videos/
+mov$Videos/
+mp2$Videos/
+mpe$Videos/
+mpg$Videos/
+mpeg$Videos/
+
+#<IMAGE FORMATS>
+jpeg$Images/JPG
+jpg$Images/JPG
+ico$Images/Icons
+gif$Images/GIF
+bmp$Images/Bitmap
+png$Images/PNG
+svg$Images/SVG
+xcf$Images/XCF
+tif$Images/TIF
+
+
+
+#<Document Formats>
+
 rtf$Documents/Writing
-nfo$Documents/iNFOs
-diz$Documents/iNFOs
+nfo$Documents/iNFO
+diz$Documents/iNFO
 xls$Documents/Spreadsheets
 xlsx$Documents/Spreadsheets
 ods$Documents/Spreadsheets
@@ -51,47 +78,53 @@ pps$Documents/Presentations
 ppt$Documents/Presentations
 pptx$Documents/Presentations
 txt$Documents/Plain Text
-pdf$Documents/PDFs
-msg$Email/Outlook
-xpi$Firefox/Extensions
-swf$Flash/SWFs
-ttf$Fonts/True Type
-gmx$Games/AOE Saved Games
-asb$Hymn Assembler Saves
-jpeg$Images/JPGs
-ico$Images/Icons
-gif$Images/GIFs
-bmp$Images/Bitmaps
-png$Images/PNGs
-svg$Images/SVGs
-xcf$Images/XCFs
-jpg$Images/JPGs
-tif$Images/TIFs
-msi$Installers/Windows
-deb$Installers/Linux/Debian
-exe$Installers/Windows
+pdf$Documents/PDF
+msg$Documents/Email/Outlook
+
+
+msi$Installers/Microsoft
+deb$Installers/Debian
+exe$Installers/Microsoft
 sis$Instalers/Symbian
 apk$Instalers/Android
-url$Internet Links
-jad$JavaME/JADs
-java$JavaSE/Source
-adr$Opera/AddressBook Backups
-p2p$PeerGuardian/Lists
-py$Python/Scripts
-reg$Registry files
-mht$Saved Websites
-htm$Saved Websites
-html$Saved Websites
-sbk$Scrapbook Factory
-lnk$Windows Shortcuts
-vkp$Sony Ericsson/Patches
-hid$Sony Ericsson HIDs
-torrent$Torrents
-mp4$Videos/MP4s
-wmv$Videos/WMVs
-flv$Videos/Flash
-avi$Videos/AVIs
-3gp$Videos/3GPs
+
+
+mht$Internet/Saved Websites
+htm$Internet/Saved Websites
+html$Internet/Saved Websites
+url$Internet/URL
+torrent$Internet/Torrents
+xml$XML
+
 vcs$Calendar
 vol$Virtual Encrypted Disk
-xml$XML files
+
+
+#MS specific
+reg$WindowsSystem/Registry
+lnk$WindowsSystem/Shortcut
+ini$WindowsSystem/Configuration/INI
+inf$WindowsSystem/Configuration/INF
+
+c$Source/C
+cpp$Source/Cpp
+py$Source/Python
+java$Source/Java
+c#$Source/C#
+
+
+dat$Data Files/
+csv$Data Files/
+iso$Disc Images/ISO
+xpi$Firefox/Extensions
+jad$JavaME/JADs
+ttf$Fonts/True Type
+gmx$Games/AOE Saved Games
+asb$Misc/Hymn Assembler
+adr$Opera/AddressBook Backups
+p2p$PeerGuardian/Lists
+vkp$Sony Ericsson/Patches
+hid$Sony Ericsson/HID
+aswcs$Avast/Themes
+vcf$Contacts
+cer$Certificates
