@@ -1,0 +1,130 @@
+a2w$Alice Projects
+gz$Archives
+ace$Archives
+zip$Archives
+cab$Archives/WindowsCab
+tar$Archives
+rar$Archives
+7z$Archives
+bz2$Archives
+jar$Archives/Jars
+
+#<PROJECTS>
+
+aup$Projects/Audacity Projects
+bwg$Projects/Brain Wave Generator Projects
+sbk$Projects/Scrapbook Factory
+cdr$Projects/Corel
+
+#<AUDIO FORMATS>
+
+mp3$Audio/
+amr$Audio/AMR
+m3u$Audio/PlayList
+wav$Audio/
+ogg$Audio/
+midi$Audio/MIDI
+mid$Audio/MIDI
+wma$Audio/
+flac$Audio/
+m4a$Audio/
+m4r$Audio/
+mp2$Audio/
+
+#<VIDEO FORMATS>
+mp4$Videos/
+wmv$Videos/
+flv$Videos/Flash
+avi$Videos/
+3gp$Videos/3GP
+swf$Flash/SWF
+m2ts$Videos/
+m1v$Videos/
+mov$Videos/
+mp2$Videos/
+mpe$Videos/
+mpg$Videos/
+mpeg$Videos/
+
+#<IMAGE FORMATS>
+jpeg$Images/JPG
+jpg$Images/JPG
+ico$Images/Icons
+gif$Images/GIF
+bmp$Images/Bitmap
+png$Images/PNG
+svg$Images/SVG
+xcf$Images/XCF
+tif$Images/TIF
+
+
+
+#<Document Formats>
+
+rtf$Documents/Writing
+nfo$Documents/iNFO
+diz$Documents/iNFO
+xls$Documents/Spreadsheets
+xlsx$Documents/Spreadsheets
+ods$Documents/Spreadsheets
+tex$Documents/LaTeX
+odt$Documents/Writing
+doc$Documents/Writing
+docx$Documents/Writing
+wpd$Documents/Writing
+wps$Documents/Writing
+odb$Documents/Databases
+pps$Documents/Presentations
+ppt$Documents/Presentations
+pptx$Documents/Presentations
+txt$Documents/Plain Text
+pdf$Documents/PDF
+msg$Documents/Email/Outlook
+
+
+msi$Installers/Microsoft
+deb$Installers/Debian
+exe$Installers/Microsoft
+sis$Instalers/Symbian
+apk$Instalers/Android
+
+
+mht$Internet/Saved Websites
+htm$Internet/Saved Websites
+html$Internet/Saved Websites
+url$Internet/URL
+torrent$Internet/Torrents
+xml$XML
+
+vcs$Calendar
+vol$Virtual Encrypted Disk
+
+
+#MS specific
+reg$WindowsSystem/Registry
+lnk$WindowsSystem/Shortcut
+ini$WindowsSystem/Configuration/INI
+inf$WindowsSystem/Configuration/INF
+
+c$Source/C
+cpp$Source/Cpp
+py$Source/Python
+java$Source/Java
+c#$Source/c#
+
+
+dat$Data Files/
+csv$Data Files/
+iso$Disc Images/ISO
+xpi$Firefox/Extensions
+jad$JavaME/JADs
+ttf$Fonts/True Type
+gmx$Games/AOE Saved Games
+asb$Misc/Hymn Assembler
+adr$Opera/AddressBook Backups
+p2p$PeerGuardian/Lists
+vkp$Sony Ericsson/Patches
+hid$Sony Ericsson/HID
+aswcs$Avast/Themes
+vcf$Contacts
+cer$Certificates
