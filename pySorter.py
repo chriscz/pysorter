@@ -4,7 +4,7 @@
 # You may redistribute this file as long as the distribution complies with below license.
 # Furthermore, you are required to mention the author and the source homepage in your application
 #
-# Version 4.0.2 (Alpha)
+# Version 4.0.3 (Alpha)
 #
 #    pySorter is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 import os
 import sys
 import shutil
+import argparse
 
 class pySorter:
     def __init__(self, path, file_types, recursive=False, unknown_suffix=" files",
@@ -29,7 +30,7 @@ class pySorter:
         '''TODO'''
         self.PATH = path_to_unix(os.path.abspath(path))
         if not os.path.isdir(path):
-            error(1, "[Error] Invalid directory")
+            self.error(1, "[Error] Invalid directory")
         self.CLEAN = clean_empty_dirs
         self.RECURSIVE = recursive
         self.ALL_DIRS = all_dirs
@@ -87,7 +88,7 @@ class pySorter:
         if has_extension:
             fullname = listing[1]+'.'+listing[2]
         if listing[1]=='' and not has_extension:
-            error(2, "[Error] File with no extension and no name, report this")
+            self.error(2, "[Error] File with no extension and no name, report this")
             return
 
         if self.types.has_key(listing[2].lower()):
@@ -99,7 +100,7 @@ class pySorter:
             self.unknown.add(listing[2].lower())
             
         if has_extension and os.path.exists(to):
-            print("[File exists]: " + to + ", skipping...")
+            print("[File already exists]: " + to + ", skipping...")
             return
         if has_extension:
             self.make_path(to, end_is_a_dir=False)
@@ -225,7 +226,7 @@ def get_script_directory():
     path = path_to_unix(os.path.abspath(__file__)).split("/")
     script_dir = ''
     for part in path:
-        script_dir += path + '/'
+        script_dir += part + '/'
     return script_dir
     
 def validate_arguments(args):
@@ -286,8 +287,7 @@ def write_unknown(iterable, path):
             afile.write(i)
             afile.write('\n')
 
-if __name__=="__main__":
-    import argparse
+def main():
     parser = argparse.ArgumentParser(description='Sort Files in a directory according to their file type')
     
     add_args(parser)
@@ -301,3 +301,7 @@ if __name__=="__main__":
 
     if(args.unknown_filetypes):
         write_unknown(sorter.unknown, args.unknown_filetypes)
+
+if __name__=="__main__":
+    sys.argv = ['pySorter.py', '/tmp/test/','-t', '/home/chris/Development/soft_dev/pySorter/pysorter/filetypes.txt', '-r']
+    main()
