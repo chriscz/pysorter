@@ -24,10 +24,49 @@ import sys
 import shutil
 import argparse
 
-class pySorter:
+DEBUG = True
+def debug(fmat, *args):
+    if DEBUG:
+        print "[DEBUG] {}".format(fmat.format(*args))
+
+
+class PySorter(object):
     def __init__(self, path, file_types, recursive=False, unknown_suffix=" files",
                 move_directories="Directories", other_files="Other", clean_empty_dirs=False, all_dirs=False):
-        '''TODO'''
+        '''Construct a new instance of PySorter for organizing some directory
+           using certain parameters
+           
+           Parameters
+           -----------
+               path : string
+                   Path to the directory that PySorter must oganize
+               file_types : dict
+                   Dictonary containing file type --> relative
+                   path mappings
+               recursive : boolean
+                   Should sorting occur recursively, i.e. should 
+                   top-level directories be traversed and contents
+                   sorted recursively
+               unknown_suffix : string
+                   The suffix that will be appended to the direcory name
+                   for file types that aren't defined in the 
+                   `file_types`  file
+               move_directories : string
+                    Relative directory path into which directories should 
+                    be moved
+               other_files : string
+                    Relative directory path which should be used to store
+                    files that are not defined in `filet_types`
+               clean_empty_dirs : boolean
+                    Toggles the removal of empty directories. this
+                    flag recursively looks through all directories
+                    and removes any empty ones that it finds
+               all_dirs : boolean
+                   Flag is only considered if the `recursive` flag is set.
+                   When true, the sorter will enter "reserved" directories,
+                   i.e. the relative root direcotries defined in 
+                   the `file_types` file
+        '''
         self.PATH = path_to_unix(os.path.abspath(path))
         if not os.path.isdir(path):
             self.error(1, "[Error] Invalid directory")
@@ -76,7 +115,7 @@ class pySorter:
         frm = path_join(self.PATH, dir)
         to = path_join(self.DIRECTORIES_TO, dir)
         if os.path.exists(to):
-            #print("Directory exists: {0}".replace('{0}', to))            
+            debug("Directory exists: {}, skipping", to)            
             return
         shutil.move(frm, self.DIRECTORIES_TO)
         
@@ -104,30 +143,25 @@ class pySorter:
             return
         if has_extension:
             self.make_path(to, end_is_a_dir=False)
+        debug("[Move] `{}` --> `{}`", path, to)
         shutil.move(path, to)
     
     def clean_empty_dirs(self):
         for path, dirs, files in os.walk(self.PATH, topdown=False):
-            #print("[Cleaning at]: "+ path)
+            debug("[Cleaning at] {}", path)
             if len(os.listdir(path))==0:
                 os.rmdir(path)
-                #print("[RmDir]: " + path)
+                debug("[RemoveDir] {}", path)
     
     def error(self, code, msg=None):
         if msg:
             print(msg)
         sys.exit(code)
         
-    def init(self):
-        None
-    
     def make_path(self, in_path,end_is_a_dir=True):
         '''Takes a standard UNIX path and creates neccesary directories'''
         if os.path.isdir(in_path):
             return
-        # print("[ToMakeStart]: " + in_path)
-        # if(not in_path.startswith("/")):
-        #    raise OSError("Path , {0}, is not absolute".replace("{0}", path))
         parts = in_path.split('/')
         if not end_is_a_dir:
             parts = parts[:-1]
@@ -144,7 +178,7 @@ class pySorter:
             is_dir = os.path.isdir(path)
             if not exists:
                 os.mkdir(path)
-                #print('[MkDir]: '+ path)
+                debug('[MkDir] {}', path)
                 continue
             if is_dir:
                 continue
@@ -162,9 +196,6 @@ def path_base_dir(path):
         return path
     else:
         return path[:index]
-
-def formatter(string, *data):
-    None
 
 def path_join(*path):
     final = ''
@@ -236,7 +267,7 @@ def validate_arguments(args):
         The application exits if they are not.    
     """
     script_dir = get_script_directory()
-    #start testing
+    #start validation
     filetypes = script_dir + "filetypes.txt"
     if args.filetypes:
             filetypes = os.path.join(os.getcwd(), args.filetypes)
@@ -296,12 +327,12 @@ def main():
     validate_arguments(args)
     to_pass = parse(args)
     
-    sorter = pySorter(args.directory, read_filetype_file(args.filetypes),**to_pass)
+    sorter = PySorter(args.directory, read_filetype_file(args.filetypes),**to_pass)
     sorter.sort()
 
     if(args.unknown_filetypes):
         write_unknown(sorter.unknown, args.unknown_filetypes)
 
 if __name__=="__main__":
-    sys.argv = ['pySorter.py', '/tmp/test/','-t', '/home/chris/Development/soft_dev/pySorter/pysorter/filetypes.txt', '-r']
+    #sys.argv = ['pySorter.py', '/tmp/test/','-t', '/home/chris/Development/soft_dev/pySorter/pysorter/filetypes.txt', '-r', '-c']
     main()
