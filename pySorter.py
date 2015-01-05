@@ -4,7 +4,7 @@
 # You may redistribute this file as long as the distribution complies with below license.
 # Furthermore, you are required to mention the author and the source homepage in your application
 #
-# Version 4.0.3 (Alpha)
+# Version 4.0.4 (Alpha)
 #
 #    pySorter is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -18,21 +18,20 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with pySorter.  If not, see <http://www.gnu.org/licenses/>.
-
+from __future__ import print_function
 import os
 import sys
 import shutil
 import argparse
 
-DEBUG = True
+DEBUG = False
 def debug(fmat, *args):
     if DEBUG:
-        print "[DEBUG] {}".format(fmat.format(*args))
-
+        print("[DEBUG] {}".format(fmat.format(*args)))
 
 class PySorter(object):
     def __init__(self, path, file_types, recursive=False, unknown_suffix=" files",
-                move_directories="Directories", other_files="Other", clean_empty_dirs=False, all_dirs=False):
+                move_directories="Directories", other_files="Other", clean_empty_dirs=False, all_dirs=False, log_moves=False):
         '''Construct a new instance of PySorter for organizing some directory
            using certain parameters
            
@@ -61,6 +60,8 @@ class PySorter(object):
                     Toggles the removal of empty directories. this
                     flag recursively looks through all directories
                     and removes any empty ones that it finds
+               log_moves: boolean
+                    Toggles whether the moving of files are logged to stdout or not
                all_dirs : boolean
                    Flag is only considered if the `recursive` flag is set.
                    When true, the sorter will enter "reserved" directories,
@@ -78,6 +79,7 @@ class PySorter(object):
         self.OTHER_FILES_TO = path_join(self.PATH, other_files)
         self.types = file_types
         self.unknown = set()
+        self.log_moves = log_moves
         
         self.TOP_LEVEL_DIRS = set()
         self.TOP_LEVEL_DIRS.add(path_base_dir(move_directories))
@@ -118,6 +120,8 @@ class PySorter(object):
             debug("Directory exists: {}, skipping", to)            
             return
         shutil.move(frm, self.DIRECTORIES_TO)
+        if self.log_moves:
+            print("[MoveDir] `{}` --> `{}`".format(frm, to))
         
     def sort_file(self, path):
         listing = split_extension(path)
@@ -139,11 +143,15 @@ class PySorter(object):
             self.unknown.add(listing[2].lower())
             
         if has_extension and os.path.exists(to):
-            print("[File already exists]: " + to + ", skipping...")
+            print("[File already exists]: " + to + ", skipping...", file=sys.stderr)
             return
         if has_extension:
             self.make_path(to, end_is_a_dir=False)
-        debug("[Move] `{}` --> `{}`", path, to)
+        if self.log_moves:
+            print("[Move] `{}` --> `{}`".format(path, to))
+        else:
+            debug("[Move] `{}` --> `{}`", path, to)
+
         shutil.move(path, to)
     
     def clean_empty_dirs(self):
@@ -155,7 +163,7 @@ class PySorter(object):
     
     def error(self, code, msg=None):
         if msg:
-            print(msg)
+            print(msg, file=sys.stderr)
         sys.exit(code)
         
     def make_path(self, in_path,end_is_a_dir=True):
@@ -183,7 +191,7 @@ class PySorter(object):
             if is_dir:
                 continue
             if exists and not is_dir:
-                raise OSError("File {0} exists, but is not a directory".replace("{0}", path))
+                raise OSError("File {} exists, but is not a directory".replace("{}", path))
 
 def path_to_unix(path):
     path = path.replace('\\','/').strip()
@@ -248,13 +256,13 @@ def add_args(parser):
     parser.add_argument('-m','--move-directories-to', help='Move directories here[Default: Directories/]')
     parser.add_argument('-o','--other-files', help='Move files of unknown type here [Default: Other/]')
     parser.add_argument('-u','--unknown-filetypes',help='Write unknown filetypes to this file')
-    parser.add_argument('-r','--recursive',help='Recursively sort directories', action="store_true")
-    parser.add_argument('-c','--clean',help='Recursively removes all empty directories', action="store_true")
-    parser.add_argument('-a','--all-dirs',help='Will enter special directories during recursive sort [Default: Disabled]', action="store_true")
-
+    parser.add_argument('-r','--recursive',help='Recursively sort directories', action='store_true')
+    parser.add_argument('-c','--clean',help='Recursively removes all empty directories', action='store_true')
+    parser.add_argument('-a','--all-dirs',help='Will enter special directories during recursive sort [Default: Disabled]', action='store_true')
+    parser.add_argument('-l', '--log-moves', help='Write all file moves to a file', action='store_true')
 
 def get_script_directory():
-    path = path_to_unix(os.path.abspath(__file__)).split("/")
+    path = path_to_unix(os.path.dirname(os.path.abspath(__file__))).split("/")
     script_dir = ''
     for part in path:
         script_dir += part + '/'
@@ -285,7 +293,7 @@ def parse(args):
         arguments that should be passed to pySorter
     """
     if args.filetypes:
-            args.filetypes = os.path.join(os.getcwd(),args.filetypes)
+        args.filetypes = os.path.join(os.getcwd(), args.filetypes)
     else:
         script_dir     = get_script_directory()
         args.filetypes = script_dir + "filetypes.txt"
@@ -308,6 +316,8 @@ def parse(args):
         to_pass['clean_empty_dirs'] = True
     if args.all_dirs:
         to_pass['all_dirs'] = True
+    if args.log_moves:
+        to_pass['log_moves'] = True
 
     return to_pass
 
