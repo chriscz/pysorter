@@ -137,16 +137,17 @@ class PySorter(object):
         if self.types.has_key(listing[2].lower()):
             to = path_join(self.PATH, self.types[listing[2].lower()], fullname)
         elif not has_extension:
-            to = self.OTHER_FILES_TO
+            to = path_join(self.OTHER_FILES_TO, fullname)
         else:
             to = path_join(self.OTHER_FILES_TO, listing[2].upper() + self.UNKNOWN_SUFFIX, fullname)
             self.unknown.add(listing[2].lower())
             
-        if has_extension and os.path.exists(to):
+        if os.path.exists(to):
             print("[File already exists]: " + to + ", skipping...", file=sys.stderr)
-            return
+
         if has_extension:
             self.make_path(to, end_is_a_dir=False)
+
         if self.log_moves:
             print("[Move] `{}` --> `{}`".format(path, to))
         else:
