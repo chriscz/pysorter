@@ -1,0 +1,2 @@
+import pysorter
+pysorter.main()

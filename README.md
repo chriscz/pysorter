@@ -15,16 +15,19 @@ Python 2.6 or higher. Tested on 2.7
 In earlier versions of pySorter, python's shutil.move(), failed to move certain files. The cause of this issue is currently unknown.
 
 ## Quick Start
-  * Download pySorter
-  * Extract
-  * Run from terminal, specifying the directory to be sorted
+  * pip install pysorter
+  * pysorter
 
 ## Releases / Revisions / Changes 
 
 The following will be kept for historical reasons. The future numbering of releases will 
 follow a form of semantic versioning.
 
-### Alpha Release 4.0.2 (Repository) 
+### Alpha Release 0.0.5 (Repository) 
+  * Change version numbering to something more sensible
+  * Add setup.py script
+
+### Alpha Release 4.0.2
   * Tested on Windows
   * Refactoring
   * Started rewriting filetypes.txt
