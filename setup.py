@@ -13,4 +13,5 @@ setup(
         entry_points = {
         "console_scripts": ['pysorter = pysorter.pysorter:main']
         },
+        package_data={'pysorter': ['*.txt']}
     )
