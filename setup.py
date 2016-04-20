@@ -4,7 +4,7 @@ setup(
         name='pysorter',
         version='0.0.5',
         description='A file-type based organizer',
-        url='',
+        url='https://github.com/chriscz/pySorter',
         author='Chris Coetzee',
         author_email='chriscz93@gmail.com',
         license='GPL',
