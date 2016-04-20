@@ -4,7 +4,7 @@
 # You may redistribute this file as long as the distribution complies with below license.
 # Furthermore, you are required to mention the author and the source homepage in your application
 #
-# Version 0.0.5 (Alpha)
+# Version 0.0.6 (Alpha)
 #
 #    pySorter is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
