@@ -1,130 +1,130 @@
-a2w$Alice Projects
-gz$Archives
-ace$Archives
-zip$Archives
-cab$Archives/WindowsCab
-tar$Archives
-rar$Archives
-7z$Archives
-bz2$Archives
-jar$Archives/Jars
+.a2w$ --> alice_projects/
+.gz$ --> archives/
+.ace$ --> archives/
+.zip$ --> archives/
+.cab$ --> archives/windowscab/
+.tar$ --> archives/
+.rar$ --> archives/
+.7z$ --> archives/
+.bz2$ --> archives/
+.jar$ --> archives/jars/
 
 #<PROJECTS>
 
-aup$Projects/Audacity Projects
-bwg$Projects/Brain Wave Generator Projects
-sbk$Projects/Scrapbook Factory
-cdr$Projects/Corel
+.aup$ --> projects/audacity_projects/
+.bwg$ --> projects/brain_wave_generator_projects/
+.sbk$ --> projects/scrapbook_factory/
+.cdr$ --> projects/corel/
 
 #<AUDIO FORMATS>
 
-mp3$Audio/
-amr$Audio/AMR
-m3u$Audio/PlayList
-wav$Audio/
-ogg$Audio/
-midi$Audio/MIDI
-mid$Audio/MIDI
-wma$Audio/
-flac$Audio/
-m4a$Audio/
-m4r$Audio/
-mp2$Audio/
+.mp3$ --> audio/
+.amr$ --> audio/amr/
+.m3u$ --> audio/playlist/
+.wav$ --> audio/
+.ogg$ --> audio/
+.midi$ --> audio/midi/
+.mid$ --> audio/midi/
+.wma$ --> audio/
+.flac$ --> audio/
+.m4a$ --> audio/
+.m4r$ --> audio/
+.mp2$ --> audio/
 
 #<VIDEO FORMATS>
-mp4$Videos/
-wmv$Videos/
-flv$Videos/Flash
-avi$Videos/
-3gp$Videos/3GP
-swf$Flash/SWF
-m2ts$Videos/
-m1v$Videos/
-mov$Videos/
-mp2$Videos/
-mpe$Videos/
-mpg$Videos/
-mpeg$Videos/
+.mp4$ --> videos/
+.wmv$ --> videos/
+.flv$ --> videos/flash/
+.avi$ --> videos/
+.3gp$ --> videos/3gp/
+.swf$ --> flash/swf/
+.m2ts$ --> videos/
+.m1v$ --> videos/
+.mov$ --> videos/
+.mp2$ --> videos/
+.mpe$ --> videos/
+.mpg$ --> videos/
+.mpeg$ --> videos/
 
 #<IMAGE FORMATS>
-jpeg$Images/JPG
-jpg$Images/JPG
-ico$Images/Icons
-gif$Images/GIF
-bmp$Images/Bitmap
-png$Images/PNG
-svg$Images/SVG
-xcf$Images/XCF
-tif$Images/TIF
+.jpeg$ --> images/jpg/
+.jpg$ --> images/jpg/
+.ico$ --> images/icons/
+.gif$ --> images/gif/
+.bmp$ --> images/bitmap/
+.png$ --> images/png/
+.svg$ --> images/svg/
+.xcf$ --> images/xcf/
+.tif$ --> images/tif/
 
 
 
-#<Document Formats>
+#<document formats>
 
-rtf$Documents/Writing
-nfo$Documents/iNFO
-diz$Documents/iNFO
-xls$Documents/Spreadsheets
-xlsx$Documents/Spreadsheets
-ods$Documents/Spreadsheets
-tex$Documents/LaTeX
-odt$Documents/Writing
-doc$Documents/Writing
-docx$Documents/Writing
-wpd$Documents/Writing
-wps$Documents/Writing
-odb$Documents/Databases
-pps$Documents/Presentations
-ppt$Documents/Presentations
-pptx$Documents/Presentations
-txt$Documents/Plain Text
-pdf$Documents/PDF
-msg$Documents/Email/Outlook
-
-
-msi$Installers/Microsoft
-deb$Installers/Debian
-exe$Installers/Microsoft
-sis$Instalers/Symbian
-apk$Instalers/Android
+.rtf$ --> documents/writing/
+.nfo$ --> documents/info/
+.diz$ --> documents/info/
+.xls$ --> documents/spreadsheets/
+.xlsx$ --> documents/spreadsheets/
+.ods$ --> documents/spreadsheets/
+.tex$ --> documents/latex/
+.odt$ --> documents/writing/
+.doc$ --> documents/writing/
+.docx$ --> documents/writing/
+.wpd$ --> documents/writing/
+.wps$ --> documents/writing/
+.odb$ --> documents/databases/
+.pps$ --> documents/presentations/
+.ppt$ --> documents/presentations/
+.pptx$ --> documents/presentations/
+.txt$ --> documents/plain_text/
+.pdf$ --> documents/pdf/
+.msg$ --> documents/email/outlook/
 
 
-mht$Internet/Saved Websites
-htm$Internet/Saved Websites
-html$Internet/Saved Websites
-url$Internet/URL
-torrent$Internet/Torrents
-xml$XML
+.msi$ --> installers/microsoft/
+.deb$ --> installers/debian/
+.exe$ --> installers/microsoft/
+.sis$ --> instalers/symbian/
+.apk$ --> instalers/android/
 
-vcs$Calendar
-vol$Virtual Encrypted Disk
+
+.mht$ --> internet/saved_websites/
+.htm$ --> internet/saved_websites/
+.html$ --> internet/saved_websites/
+.url$ --> internet/url/
+.torrent$ --> internet/torrents/
+.xml$ --> xml/
+
+.vcs$ --> calendar/
+.vol$ --> virtual_encrypted_disk/
 
 
 #MS specific
-reg$WindowsSystem/Registry
-lnk$WindowsSystem/Shortcut
-ini$WindowsSystem/Configuration/INI
-inf$WindowsSystem/Configuration/INF
+.reg$ --> windowssystem/registry/
+.lnk$ --> windowssystem/shortcut/
+.ini$ --> windowssystem/configuration/ini/
+.inf$ --> windowssystem/configuration/inf/
 
-c$Source/C
-cpp$Source/Cpp
-py$Source/Python
-java$Source/Java
-c#$Source/C#
+.c$ --> source/c/
+.cpp$ --> source/cpp/
+.py$ --> source/python/
+.java$ --> source/java/
+.c\#$ --> source/c\#/
 
 
-dat$Data Files/
-csv$Data Files/
-iso$Disc Images/ISO
-xpi$Firefox/Extensions
-jad$JavaME/JADs
-ttf$Fonts/True Type
-gmx$Games/AOE Saved Games
-asb$Misc/Hymn Assembler
-adr$Opera/AddressBook Backups
-p2p$PeerGuardian/Lists
-vkp$Sony Ericsson/Patches
-hid$Sony Ericsson/HID
-aswcs$Avast/Themes
-vcf$Contacts
-cer$Certificates
+.dat$ --> data_files/
+.csv$ --> data_files/
+.iso$ --> disc_images/iso/
+.xpi$ --> firefox/extensions/
+.jad$ --> javame/jads/
+.ttf$ --> fonts/true_type/
+.gmx$ --> games/aoe_saved_games/
+.asb$ --> misc/hymn_assembler/
+.adr$ --> opera/addressbook_backups/
+.p2p$ --> peerguardian/lists/
+.vkp$ --> sony_ericsson/patches/
+.hid$ --> sony_ericsson/hid/
+.aswcs$ --> avast/themes/
+.vcf$ --> contacts/
+.cer$ --> certificates/

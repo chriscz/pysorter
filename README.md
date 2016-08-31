@@ -4,7 +4,7 @@ pySorter
 Sorts files in a directory into predefined directories according to their filetype.
 
 pySorter sorts files in a given directory into predefined directories according to their file type.
-pySorter makes use of python's shutil library to move files and directories. 
+pySorter makes use of python's shutil library to move_dir files and directories.
 As stated in the documentation, the shutil library may not copy all file metadata.
 
 ## Requirements
@@ -12,7 +12,7 @@ As stated in the documentation, the shutil library may not copy all file metadat
 Python 2.6 or higher. Tested on 2.7
 
 ## Issues
-In earlier versions of pySorter, python's shutil.move(), failed to move certain files. The cause of this issue is currently unknown.
+In earlier versions of pySorter, python's shutil.move_dir(), failed to move_dir certain files. The cause of this issue is currently unknown.
 
 ## Quick Start
   * pip install pysorter
@@ -42,7 +42,7 @@ follow a form of semantic versioning.
   * Python2.7 compatibility
   * *Issues*
     * Exceptions that are not handled
-      * Write/Read permission denied on move
+      * Write/Read permission denied on move_dir
     * Not yet tested on Windows
         
 ### Fifth Revision: 11 June 201
