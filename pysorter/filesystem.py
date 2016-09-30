@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import logging
 import os
 import shutil
@@ -135,7 +137,7 @@ def _os_path_split_asunder(path, debug=False):
     parts = []
     while True:
         newpath, tail = os.path.split(path)
-        if debug: print repr(path), (newpath, tail)
+        if debug: print(repr(path), (newpath, tail))
         if newpath == path:
             assert not tail
             if path: parts.append(path)

@@ -9,8 +9,8 @@ import logging
 import os
 import sys
 
-import util
-from sorter import PySorter
+from . import util
+from .sorter import PySorter
 
 from ..rules import DefaultSortRule
 

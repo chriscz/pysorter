@@ -1,5 +1,18 @@
-from pprint import pformat
+from __future__ import unicode_literals
 import os
+
+
+
+def is_string(obj):
+    import sys
+
+    PY3 = sys.version_info[0] == 3
+
+    if PY3:
+        string_types = str,
+    else:
+        string_types = basestring,
+    return isinstance(obj, string_types)
 
 
 def initialize_dir(d, filetypes, paths_to_make):
@@ -16,7 +29,7 @@ def initialize_dir(d, filetypes, paths_to_make):
 
     """
     # --- create a mapping file
-    d.write('filetypes.py', mkfiletypesstr(filetypes))
+    d.write('filetypes.py', bytearray(mkfiletypesstr(filetypes), encoding="utf-8"))
 
     # --- create temp files
     for path in paths_to_make:
@@ -39,32 +52,31 @@ def mkfiletypesstr(mapping):
     """
     import inspect
     import textwrap
-    from StringIO import StringIO
-
+    from io import StringIO
     s = StringIO()
 
     # --- first dump any functions definitions
     for v in mapping.values():
         if callable(v):
-            s.write(textwrap.dedent(inspect.getsource(v)))
+            s.write(textwrap.dedent(unicode(inspect.getsource(v), encoding="utf-8")))
             s.write('\n')
 
     s.write('RULES = [')
-    for k, v in mapping.iteritems():
-        value = repr(v)
+    for k in mapping:
+        value = repr(mapping[k])
         if callable(v):
             value = v.__name__
         s.write('({}, {}),\n'.format(repr(k), value))
     s.write(']')
     s = s.getvalue()
-    #print s
+    # print s
     return s
 
 
 def _build_path_tree(paths, path_set, prefix=None):
     # print paths, prefix
     for path in paths:
-        if isinstance(path, basestring):
+        if is_string(path):
             if prefix is not None:
                 path = os.path.join(prefix, path)
             dirpath = os.path.dirname(path)
@@ -122,3 +134,14 @@ def build_path_tree(paths, prefix=None):
     pathset = set()
     _build_path_tree(paths, pathset, prefix=prefix)
     return sorted(pathset)
+
+
+def tempdir(function):
+    def wrapped(*args, **kwargs):
+        from testfixtures import TempDirectory
+        with TempDirectory() as d:
+            return function(d, *args, **kwargs)
+
+    wrapped.__name__ = function.__name__
+    wrapped.__module__ = function.__module__
+    return wrapped

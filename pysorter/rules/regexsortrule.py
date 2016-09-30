@@ -3,6 +3,8 @@ from __future__ import print_function
 import logging
 import re
 
+from ..core.util import is_string
+
 log = logging.getLogger(__name__)
 
 from .basesortrule import BaseSortRule, UnhandledPathException
@@ -45,7 +47,7 @@ class DefaultSortRule(BaseSortRule):
         """
         namespace = {'__builtins__': __builtins__}
         with open(filepath, 'r') as f:
-            exec f in namespace
+            exec(f.read(), namespace)
 
         if 'RULES' not in namespace:
             msg = "Configuration file missing RULES: {}".format(filepath)
@@ -57,7 +59,7 @@ class DefaultSortRule(BaseSortRule):
             item[0] = re.compile(item[0])
             if callable(item[1]):
                 rules.append(tuple(item))
-            elif isinstance(item[1], basestring):
+            elif is_string(item[1]):
                 # XXX remove after debugging
                 item[1] = make_regex_rule_function(item[0], item[1])
                 rules.append(item)
@@ -81,7 +83,7 @@ def make_regex_rule_function(pattern, dstfmt):
         try:
             pargs = [match.group(0)] + list(match.groups())
             destination = dstfmt.format(*pargs,
-                                      **match.groupdict())
+                                        **match.groupdict())
         except IndexError:
             raise ValueError("Destination string placeholders out of range: {}".format(dstfmt))
         except KeyError as e:

@@ -1,0 +1,4 @@
+include LICENSE.txt
+include description.txt
+include commands.py
+include pysorter/version.txt

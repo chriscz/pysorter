@@ -1,16 +1,13 @@
+from __future__ import print_function
 import os
-
-from testfixtures import TempDirectory, tempdir
-
-from helper import initialize_dir
-
-import helper
-from pysorter.core import pysorter
 
 import pytest
 
+from . import helper
+from ..core import pysorter
 
-@tempdir()
+
+@helper.tempdir
 def test_replacement_pattern(d):
     os.chdir(d.path)
     filetypes = {
@@ -20,7 +17,7 @@ def test_replacement_pattern(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -34,7 +31,7 @@ def test_replacement_pattern(d):
     d.compare(expected=expected, path=to_sort)
 
 
-@tempdir()
+@helper.tempdir
 def test_bad_keyword_replacement_pattern(d):
     os.chdir(d.path)
     filetypes = {
@@ -44,7 +41,7 @@ def test_bad_keyword_replacement_pattern(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -52,7 +49,7 @@ def test_bad_keyword_replacement_pattern(d):
         pysorter.main(args)
 
 
-@tempdir()
+@helper.tempdir
 def test_bad_numbered_replacement_pattern(d):
     os.chdir(d.path)
     filetypes = {
@@ -62,7 +59,7 @@ def test_bad_numbered_replacement_pattern(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -70,7 +67,7 @@ def test_bad_numbered_replacement_pattern(d):
         pysorter.main(args)
 
 
-@tempdir()
+@helper.tempdir
 def test_callable_configuration(d):
     def comparison_function(match, entity):
         return 'foobar/'
@@ -84,7 +81,7 @@ def test_callable_configuration(d):
     dest = 'sorted/'
 
     to_make = ['hello_cruel.pdf']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '-d', dest]
 
@@ -99,7 +96,7 @@ def test_callable_configuration(d):
     d.compare(expected=expected, path=dest)
 
 
-@tempdir()
+@helper.tempdir
 def test_rule_behaviour_into_directory_for_file(d):
     os.chdir(d.path)
     filetypes = {
@@ -109,7 +106,7 @@ def test_rule_behaviour_into_directory_for_file(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -123,7 +120,7 @@ def test_rule_behaviour_into_directory_for_file(d):
     d.compare(expected=expected, path=to_sort)
 
 
-@tempdir()
+@helper.tempdir
 def test_rule_behaviour_to_for_file(d):
     os.chdir(d.path)
     filetypes = {
@@ -133,7 +130,7 @@ def test_rule_behaviour_to_for_file(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -146,7 +143,7 @@ def test_rule_behaviour_to_for_file(d):
     d.compare(expected=expected, path=to_sort)
 
 
-@tempdir()
+@helper.tempdir
 def test_rule_behaviour_into_directory_for_dir(d):
     os.chdir(d.path)
     filetypes = {
@@ -156,7 +153,7 @@ def test_rule_behaviour_into_directory_for_dir(d):
     to_sort = 'files/'
 
     to_make = ['foo/']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs']
 
@@ -170,7 +167,7 @@ def test_rule_behaviour_into_directory_for_dir(d):
     d.compare(expected=expected, path=to_sort)
 
 
-@tempdir()
+@helper.tempdir
 def test_rule_behaviour_to_for_dir(d):
     os.chdir(d.path)
     filetypes = {
@@ -180,7 +177,7 @@ def test_rule_behaviour_to_for_dir(d):
     to_sort = 'files/'
 
     to_make = ['foo/']
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs']
 
@@ -191,8 +188,3 @@ def test_rule_behaviour_to_for_dir(d):
         'directories/']
     pysorter.main(args)
     d.compare(expected=expected, path=to_sort)
-
-
-if __name__ == '__main__':
-    # test_noargs()
-    pass

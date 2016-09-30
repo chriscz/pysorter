@@ -13,3 +13,15 @@ def write_unknown(unknowns, path):
         for i in unknowns:
             ufile.write(i)
             ufile.write('\n')
+
+
+def is_string(obj):
+    import sys
+
+    PY3 = sys.version_info[0] == 3
+
+    if PY3:
+        string_types = str,
+    else:
+        string_types = basestring,
+    return isinstance(obj, string_types)

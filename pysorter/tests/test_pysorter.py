@@ -1,16 +1,15 @@
+from __future__ import print_function
 import os
-
-from testfixtures import TempDirectory, tempdir
-
-from helper import initialize_dir
-
-import helper
-from pysorter.core import pysorter
 
 import pytest
 
+from . import helper
+from testfixtures import tempdir
 
-@tempdir()
+from ..core import pysorter
+
+
+@helper.tempdir
 def test_bad_filetypes(d):
     os.chdir(d.path)
     filetypes = {}
@@ -18,7 +17,7 @@ def test_bad_filetypes(d):
     to_sort = 'files/'
 
     to_make = []
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes']
 
@@ -26,7 +25,7 @@ def test_bad_filetypes(d):
         pysorter.main(args)
 
 
-@tempdir()
+@helper.tempdir
 def test_unknown_filetypes_created(d):
     os.chdir(d.path)
     filetypes = {}
@@ -34,7 +33,7 @@ def test_unknown_filetypes_created(d):
     to_sort = 'files/'
 
     to_make = []
-    initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-u', 'unknown_files']
 
@@ -48,7 +47,3 @@ def test_unknown_filetypes_created(d):
 
     pysorter.main(args)
     d.compare(expected=expected)
-
-if __name__ == '__main__':
-    # test_noargs()
-    pass
