@@ -1,4 +1,4 @@
-include LICENSE.txt
+include license.txt
 include description.txt
 include commands.py
 include pysorter/version.txt
