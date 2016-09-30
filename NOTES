@@ -1,0 +1,6 @@
+# for testing coverage
+py.test --cov-report html:$PWD/htmlcov --cov=pysorter
+ptw --runner py.test --cov-report html:$PWD/htmlcov --cov=pysorter
+
+# look at the following
+# setup.cfg --> contains configuration for pytest and pytest watch

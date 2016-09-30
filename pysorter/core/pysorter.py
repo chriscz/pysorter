@@ -3,14 +3,16 @@
 """The main implementation for calling pysorter from the commandline"""
 
 from __future__ import print_function
-import os
-import sys
-import util
+
 import argparse
 import logging
+import os
+import sys
 
+import util
 from sorter import PySorter
-from rules import RegexSortRule
+
+from ..rules import DefaultSortRule
 
 log = logging.getLogger(__name__)
 
@@ -24,33 +26,13 @@ def validate_arguments(args):
     if args.filetypes:
         args.filetypes = os.path.abspath(args.filetypes)
     else:
-        args.filetypes = os.path.join(util.script_directory(), 'filetypes.txt')
+        args.filetypes = os.path.join(util.script_directory(), 'filetypes.py')
 
-    if not os.path.exists(args.filetypes):
-        print("Invalid Filetypes file, please specify an existing file")
-        sys.exit(2)
-    if not os.path.exists(args.directory):
-        print("Invalid Directory, please specify an existing directory")
-        sys.exit(3)
-
-
-def parse(args):
-    """
-        Checks the validity of the given arguments
-        Adjusts the given argumentparser and returns a dictionarry of
-        arguments that should be passed to pySorter
-    """
-    # replace filetypes path with full path
-    if args.filetypes:
-        args.filetypes = os.path.abspath(args.filetypes)
-    else:
-        args.filetypes = os.path.join(util.script_directory(), "filetypes.txt")
+    if not os.path.isfile(args.filetypes):
+        raise OSError("Filetypes is not a file or does not exist: {}".format(args.filetypes))
 
     if args.unknown_filetypes:
         args.unknown_filetypes = os.path.abspath(args.unknown_filetypes)
-
-    if args.all_dirs and not args.recursive:
-        log.warn("--all-dirs has no effect without --recursive")
 
     return args
 
@@ -67,46 +49,43 @@ def parse_args(args=None):
                         dest='dest_dir',
                         default=None)
 
+    parser.add_argument('-p', '--process-dirs',
+                        help='Should directories be included in the files that are to be sorted',
+                        action='store_true',
+                        dest="do_process_dirs")
+
     parser.add_argument('-t', '--filetypes',
-                        help='File containing file types [Default: filetypes.txt]',
+                        help='File containing file types [Default: filetypes.py]',
                         default=None)
 
-    parser.add_argument('-m', '--move_dir-directories-to',
-                        help='Move directories here [Default: Directories/]',
+    parser.add_argument('-m', '--move-dirs-to',
+                        help='Move unprocessed directories here [Default: directories/]',
                         dest="directories_dest")
 
     parser.add_argument('-o', '--other-files',
-                        help='Move files of unknown type here [Default: Other/]')
+                        help='Move unprocessed files here [Default: other/]')
 
     parser.add_argument('-u', '--unknown-filetypes',
                         help='Write unknown filetypes to this file', )
 
     parser.add_argument('-r', '--recursive',
                         help='Recursively organize directories',
-                        action='store_true')
+                        action='store_true',
+                        dest="do_recurse")
 
-    parser.add_argument('-c', '--clean-empty',
+    parser.add_argument('-c', '--remove-empty-dirs',
                         help='Recursively removes all empty directories',
                         action='store_true',
-                        dest='clean_empty_dirs')
+                        dest='do_remove_empty_dirs')
 
-    parser.add_argument('-a', '--all-dirs',
-                        help='Will enter special directories during recursive organize, must be specified'
-                             'in conjunction with --recursive to work [Default: Disabled]',
-                        action='store_true')
-
-    parser.add_argument('-l', '--log-moves', help='Write all file moves to a file',
-                        action='store_true')
-
-    return parser.parse_args(args)
+    return validate_arguments(parser.parse_args(args))
 
 
 def main(args=None):
     logging.basicConfig()
-    args = parse_args(args or sys.argv)
-    validate_arguments(args)
+    args = parse_args(args)
 
-    rules = RegexSortRule.load_from(args.filetypes)
+    rules = DefaultSortRule.load_from(args.filetypes)
 
     topass = dict(vars(args))
 

@@ -1,2 +1,3 @@
-import pysorter
+from core import pysorter
+
 pysorter.main()

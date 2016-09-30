@@ -1,2 +1,2 @@
 from .basesortrule import BaseSortRule
-from .regex.rule import RegexSortRule
+from .regexsortrule import DefaultSortRule

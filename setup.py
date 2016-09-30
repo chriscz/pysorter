@@ -1,17 +1,29 @@
 from setuptools import setup
+import os
+
+name = 'pysorter'
+base_dir = os.path.dirname(__file__)
 
 setup(
         name='pysorter',
-        version='0.0.6',
-        description='A file-type based organizer',
+        version=open(os.path.join(base_dir, name, 'version.txt')).read().strip(),
+        description='A file-extension based organizer',
+        license='GPL',
         url='https://github.com/chriscz/pySorter',
+
         author='Chris Coetzee',
         author_email='chriscz93@gmail.com',
-        license='GPL',
+        
         packages=['pysorter'],
+
+        include_package_data = True,
         zip_safe=False,
+
         entry_points = {
-        "console_scripts": ['pysorter = pysorter.pysorter:main']
+            "console_scripts": ['pysorter = pysorter.core.pysorter:main']
         },
-        package_data={'pysorter': ['*.txt']}
+        extras_require=dict(
+            test=['pytest', 'testfixtures', 'pytest-cov'],
+            build=[]
+        ),
     )

@@ -5,11 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class UnhandledPathException(Exception):
-    """
-    Raised by a RuleSet if it does not know how to organize the given file
-    or directory.
-    """
+class UnhandledPathException(Exception): pass
 
 
 class BaseSortRule(object):
@@ -17,12 +13,18 @@ class BaseSortRule(object):
     Base implementation that all sorting rules must extend.
     """
 
-    def process(self, file_entity):
+    def destination(self, path):
         """
-        processes the given entity (file or directory), returning the destination.
-        The destination can be either relative or absolute
-        where the entity must be moved to.
-         If the entity cannot be handled and UnhandledPathException should be
-        raised.
+        Process the given path. If path ends in a `/` it's a directory else it's a file.
+        This method can return an absolute or relative destination.
+
+        When a destination ends in `/` the item at the path will me moved *inside*
+        that destination, else the item will be moved to the location *at* destination.
+
+        Raises
+        ------
+        UnhandledPathException:
+            if the method cannot handle the given path
+
         """
         raise NotImplementedError()

@@ -1,9 +1,9 @@
-import os
+from os.path import *
 
 
 def script_directory():
     """Returns the full path to where this script located"""
-    return os.path.dirname(os.path.abspath(__file__))
+    return abspath(join(dirname(abspath(__file__)), '../'))
 
 
 def write_unknown(unknowns, path):
