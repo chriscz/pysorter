@@ -1,4 +1,4 @@
-from setuptools import setup, Command
+from setuptools import setup, find_packages, Command
 import os
 from commands import *
 
@@ -16,7 +16,7 @@ setup(
     author='Chris Coetzee',
     author_email='chriscz93@gmail.com',
 
-    packages=['pysorter'],
+    packages=find_packages(),
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'testfixtures', 'pytest-cov'],
 
@@ -28,7 +28,7 @@ setup(
     },
 
     entry_points={
-        "console_scripts": ['pysorter = pysorter.core.pysorter:main']
+        "console_scripts": ['pysorter=pysorter.core.pysorter:main']
     },
     extras_require=dict(
         build=[],
@@ -39,5 +39,6 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Topic :: Utilities",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
     ]
 )
