@@ -11,3 +11,6 @@ python:
 install: "pip install -Ue .[test,build]"
 
 script: "pytest --cov=pysorter"
+
+after_success:
+    - coveralls
