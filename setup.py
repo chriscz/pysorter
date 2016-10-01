@@ -1,5 +1,7 @@
-from setuptools import setup, find_packages, Command
 import os
+import sys
+
+from setuptools import setup, find_packages, Command
 from commands import *
 
 tests_require=['pytest-cov', 'pytest', 'testfixtures']
@@ -23,6 +25,7 @@ setup(
     zip_safe=False,
 
     cmdclass={
+        'test': PyTestCommand,
         'coverage': CoverageCommand,
         'bump': BumpVersionCommand,
     },

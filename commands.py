@@ -1,6 +1,8 @@
 import os
+import sys
 
 from setuptools import Command
+from setuptools.command.test import test as TestCommand
 
 name = 'pysorter'
 base_dir = os.path.dirname(__file__)
@@ -61,4 +63,19 @@ class BumpVersionCommand(Command):
         version = '.'.join([str(_) for _ in version])
         write_version(version)
         print("version bumped {} --> {}".format(current, version))
-        
+    
+
+class PyTestCommand(TestCommand):
+    """Setup the py.test test runner."""
+
+    def finalize_options(self):
+        """Set options for the command line."""
+        TestCommand.finalize_options(self)
+        self.test_args = ['--cov', name]
+        self.test_suite = True
+
+    def run_tests(self):
+        """Execute the test runner command."""
+        # Import here, because outside the required eggs aren't loaded yet
+        import pytest
+        sys.exit(pytest.main(self.test_args))

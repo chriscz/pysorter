@@ -10,7 +10,7 @@ python:
 
 install: "pip install -Ue .[test,build]"
 
-script: "pytest --cov=pysorter"
+script: "coverage run --source pysorter setup.py test"
 
 after_success:
  - coveralls
