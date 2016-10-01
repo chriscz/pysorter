@@ -2,14 +2,11 @@ from setuptools import setup, find_packages, Command
 import os
 from commands import *
 
-name = 'pysorter'
-base_dir = os.path.dirname(__file__)
-
 tests_require=['pytest', 'testfixtures', 'pytest-cov'],
 
 setup(
-    name='pysorter',
-    version=open(os.path.join(base_dir, name, 'version.txt')).read().strip(),
+    name=name,
+    version=read_version(),
     description='A regex based file organizer',
     long_description=open(os.path.join(base_dir, 'description.txt')).read().strip(),
     license='GPL',
@@ -27,13 +24,14 @@ setup(
 
     cmdclass={
         'coverage': CoverageCommand,
+        'bump': BumpVersionCommand,
     },
 
     entry_points={
         "console_scripts": ['pysorter=pysorter.core.pysorter:main']
     },
     extras_require=dict(
-        build=['twine'],
+        build=['twine', 'wheel', 'setuptools-git'],
         test=['pytest', 'testfixtures', 'pytest-cov'],
     ),
     classifiers=[
