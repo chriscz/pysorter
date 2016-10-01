@@ -8,9 +8,12 @@ python:
  - "3.3"
  - "2.7"
 
-install: "pip install -Ue .[test,build]"
+install: 
+    - pip install -Ue .[test,build]
+    - pip install coveralls
 
-script: "coverage run --source pysorter setup.py test"
+script: 
+    - coverage run --source pysorter setup.py test
 
 after_success:
  - coveralls
