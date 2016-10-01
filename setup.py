@@ -2,7 +2,7 @@ from setuptools import setup, find_packages, Command
 import os
 from commands import *
 
-tests_require=['pytest', 'testfixtures', 'pytest-cov'],
+tests_require=['pytest-cov', 'pytest', 'testfixtures']
 
 setup(
     name=name,
