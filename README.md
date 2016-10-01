@@ -1,22 +1,25 @@
-pySorter
+pysorter
 ========
+Commandline utility for organizing files into predefined directories according to their filetype.
 
-Sorts files in a directory into predefined directories according to their filetype.
+To add your own sorting rules make a copy of  `pysorter/filetypes.py`.
+The file is a normal python scripy with a dictionary definition `RULES`,
+in the global scope. Rules are tuples of the form (regex_string, callable or string).
+For more information, read the comment in the `filetypes.py` file.
 
-pySorter sorts files in a given directory into predefined directories according to their file type.
-pySorter makes use of python's shutil library to move_dir files and directories.
-As stated in the documentation, the shutil library may not copy all file metadata.
-
-## Requirements
-
-Python 2.6 or higher. Tested on 2.7
-
-## Issues
-In earlier versions of pySorter, python's shutil.move_dir(), failed to move_dir certain files. The cause of this issue is currently unknown.
+As stated in the python documentation, the shutil library may not copy all file metadata.
+This will not affect the content of your files, however
 
 ## Quick Start
-  * pip install pysorter
-  * pysorter
+  * `pip install pysorter`
+  * `pysorter`
+
+# Requirements
+Python version:
+ * 2.7
+ * 3.3
+ * 3.4
+ * 3.5
 
 ## Releases / Revisions / Changes 
 
