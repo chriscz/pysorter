@@ -71,7 +71,7 @@ class PyTestCommand(TestCommand):
     def finalize_options(self):
         """Set options for the command line."""
         TestCommand.finalize_options(self)
-        self.test_args = ['--cov', name]
+        self.test_args = []# ['--cov', name]
         self.test_suite = True
 
     def run_tests(self):
