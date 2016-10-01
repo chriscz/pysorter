@@ -3,9 +3,14 @@ language: python
 sudo: false
 
 python:
-  - "3.4"
-  - "2.7"
+ - "3.5"
+ - "3.4"
+ - "3.3"
+ - "2.7"
 
 install: "pip install -Ue .[test,build]"
 
 script: "pytest --cov=pysorter"
+
+after_success:
+ - coveralls

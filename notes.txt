@@ -10,3 +10,8 @@ ptw --runner py.test --cov-report html:$PWD/htmlcov --cov=pysorter
 
 # Using twine for doing setup.py stuff
 # https://packaging.python.org/distributing/
+
+# build and deploy
+rm -r dist/*
+python setup.py sdist bdist_wheel
+twine upload dist/*
