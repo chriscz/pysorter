@@ -1,4 +1,7 @@
-pysorter
+[![Build Status](https://travis-ci.org/chriscz/pysorter.svg?branch=master)](https://travis-ci.org/chriscz/pysorter)
+[![Coverage Status](https://coveralls.io/repos/github/chriscz/pysorter/badge.svg?branch=master)](https://coveralls.io/github/chriscz/pysorter?branch=master)
+
+Pysorter
 ========
 Commandline utility for organizing files into predefined directories according to their filetype.
 
