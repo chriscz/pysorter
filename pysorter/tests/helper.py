@@ -58,7 +58,13 @@ def mkfiletypesstr(mapping):
     # --- first dump any functions definitions
     for v in mapping.values():
         if callable(v):
-            s.write(textwrap.dedent(unicode(inspect.getsource(v), encoding="utf-8")))
+            source = textwrap.dedent(inspect.getsource(v))
+            # accomodate for python3
+            try:
+                source = unicode(source, encoding="utf-8")
+            except NameError:
+                pass
+            s.write(source)
             s.write('\n')
 
     s.write('RULES = [')
