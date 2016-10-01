@@ -5,6 +5,8 @@ from commands import *
 name = 'pysorter'
 base_dir = os.path.dirname(__file__)
 
+tests_require=['pytest', 'testfixtures', 'pytest-cov'],
+
 setup(
     name='pysorter',
     version=open(os.path.join(base_dir, name, 'version.txt')).read().strip(),
@@ -18,7 +20,7 @@ setup(
 
     packages=find_packages(),
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'testfixtures', 'pytest-cov'],
+    tests_require=tests_require,
 
     include_package_data=True,
     zip_safe=False,
@@ -31,7 +33,8 @@ setup(
         "console_scripts": ['pysorter=pysorter.core.pysorter:main']
     },
     extras_require=dict(
-        build=[],
+        build=['twine'],
+        test=['pytest', 'testfixtures', 'pytest-cov'],
     ),
     classifiers=[
         "Development Status :: 4 - Beta",
