@@ -33,26 +33,28 @@ def validate_arguments(args):
 
     if args.unknown_filetypes:
         args.unknown_filetypes = os.path.abspath(args.unknown_filetypes)
+    
 
     return args
 
 
 def parse_args(args=None):
     """Create an argument parser"""
-    parser = argparse.ArgumentParser(description='Sort Files in a directory according to their file type')
+    from .. import __version__
+    parser = argparse.ArgumentParser(description='Reorganizes files and directories in a directory according to certain rules')
 
     parser.add_argument('directory',
                         help='The directory to be organized')
 
     parser.add_argument('-d', '--destination',
-                        help='The (root) destination directory to move_dir the organized files to',
+                        help='The destination directory to move organized files to.',
                         dest='dest_dir',
                         default=None)
 
     parser.add_argument('-p', '--process-dirs',
-                        help='Should directories be included in the files that are to be sorted',
+                        help='Should directories be included in the processing?',
                         action='store_true',
-                        dest="do_process_dirs")
+                        dest='do_process_dirs')
 
     parser.add_argument('-t', '--filetypes',
                         help='File containing file types [Default: filetypes.py]',
@@ -60,23 +62,29 @@ def parse_args(args=None):
 
     parser.add_argument('-m', '--move-dirs-to',
                         help='Move unprocessed directories here [Default: directories/]',
-                        dest="directories_dest")
+                        dest='directories_dest')
 
     parser.add_argument('-o', '--other-files',
                         help='Move unprocessed files here [Default: other/]')
 
-    parser.add_argument('-u', '--unknown-filetypes',
-                        help='Write unknown filetypes to this file', )
+    parser.add_argument('-u', '--unhandled-filetypes',
+                        help='Write the extensions of unhandled filetypes to this file',
+                        dest='unknown_filetypes')
 
     parser.add_argument('-r', '--recursive',
                         help='Recursively organize directories',
                         action='store_true',
-                        dest="do_recurse")
+                        dest='do_recurse')
 
     parser.add_argument('-c', '--remove-empty-dirs',
-                        help='Recursively removes all empty directories',
+                        help='Recursively removes all empty directories in the directory being organized.',
                         action='store_true',
                         dest='do_remove_empty_dirs')
+
+    parser.add_argument('-V', '--version',
+                        action="version",
+                        version=__version__,
+                        help='Prints out the current version of pysorter')
 
     return validate_arguments(parser.parse_args(args))
 
@@ -100,9 +108,9 @@ def main(args=None):
     # write out all the unknown file types
     if args.unknown_filetypes:
         util.write_unknown(sorter.unknown_types, args.unknown_filetypes)
-
+    return 0
 
 if __name__ == "__main__":
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     # sys.argv = ['pySorter.py', '/tmp/test/','-t', '/home/chris/Development/soft_dev/pySorter/pysorter/filetypes.txt', '-r', '-c']
-    main()
+    sys.exit(main())
