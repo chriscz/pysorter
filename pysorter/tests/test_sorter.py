@@ -294,10 +294,15 @@ def test_print_version(capsys):
         pysorter.main(['--version'])
         assert False, 'did not print out version.'
     except SystemExit:
-        _, err = capsys.readouterr()
+        out, err = capsys.readouterr()
         from .. import __version__ 
-        assert err.strip() == __version__
-
+        
+        # Python 3.4 & 3.5 print out the version on  stdout instead
+        # of stderr.
+        try:
+            assert err.strip() == __version__
+        except AssertionError:
+            assert out.strip() == __version__
 
 
 @helper.tempdir

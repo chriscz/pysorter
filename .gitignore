@@ -1,8 +1,8 @@
 /coverage_report
 /build
-/.coverage
-/.eggs
-/.cache
+.coverage
+.eggs
+.cache
 *.pyc
 *.egg
 
