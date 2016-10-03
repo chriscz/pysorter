@@ -289,6 +289,16 @@ def test_no_recurse_dir(d):
                ] + helper.build_path_tree(to_make, 'directories/')
     d.compare(expected=expected, path=to_sort)
 
+def test_print_version(capsys):
+    try:
+        pysorter.main(['--version'])
+        assert False, 'did not print out version.'
+    except SystemExit:
+        _, err = capsys.readouterr()
+        from .. import __version__ 
+        assert err.strip() == __version__
+
+
 
 @helper.tempdir
 def test_write_unknown_types_correct(d):
