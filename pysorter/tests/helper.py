@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 import os
-
+from .. import action
 
 
 def is_string(obj):
@@ -54,10 +54,12 @@ def mkfiletypesstr(mapping):
     import textwrap
     from io import StringIO
     s = StringIO()
-
+    s.write('from pysorter import action\n')
     # --- first dump any functions definitions
     for v in mapping.values():
-        if callable(v):
+        if v in action.actionset:
+            continue
+        elif callable(v):
             source = textwrap.dedent(inspect.getsource(v))
             # accomodate for python3
             try:
@@ -67,15 +69,22 @@ def mkfiletypesstr(mapping):
             s.write(source)
             s.write('\n')
 
+    # write out the rules array
     s.write('RULES = [')
     for k in mapping:
-        value = repr(mapping[k])
-        if callable(v):
+        value = mapping[k]
+
+        if value in action.actionset:
+            value = 'action.' + value.__name__
+        elif callable(value):
             value = v.__name__
+        else:
+            value = repr(value)
+
         s.write('({}, {}),\n'.format(repr(k), value))
-    s.write(']')
+    s.write(']\n')
     s = s.getvalue()
-    # print s
+    #print s
     return s
 
 
@@ -146,6 +155,7 @@ def tempdir(function):
     def wrapped(*args, **kwargs):
         from testfixtures import TempDirectory
         with TempDirectory() as d:
+            os.chdir(d.path)
             return function(d, *args, **kwargs)
 
     wrapped.__name__ = function.__name__

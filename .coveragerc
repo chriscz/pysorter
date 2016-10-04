@@ -1,5 +1,6 @@
 [run]
 branch = True
+omit = **/pysorter/tests/*
 
 [report]
 # Regexes for lines to exclude from consideration

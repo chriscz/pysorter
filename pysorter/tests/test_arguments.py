@@ -1,16 +1,14 @@
 from __future__ import print_function
-import os
 
+import os
 import pytest
 
 from . import helper
-from testfixtures import tempdir
-
 from ..core import pysorter
 
 
 @helper.tempdir
-def test_bad_filetypes(d):
+def test_bad_filetypes_file(d):
     os.chdir(d.path)
     filetypes = {}
 
@@ -27,23 +25,32 @@ def test_bad_filetypes(d):
 
 @helper.tempdir
 def test_unknown_filetypes_created(d):
-    os.chdir(d.path)
     filetypes = {}
 
     to_sort = 'files/'
 
-    to_make = []
+    to_make = ['']
     helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
-    args = [to_sort, '-u', 'unknown_files']
+    args = [to_sort, '-u', 'unknown_files', '-t', 'filetypes.py']
 
-    # --- compare sorted
-    expected = helper.build_path_tree(['',
-                                       'other/',
-                                       'directories/'],
-                                      to_sort) + \
-               ['unknown_files',
-                'filetypes.py']
+    expected = helper.build_path_tree([''], to_sort)
+    expected += ['unknown_files', 'filetypes.py']
 
     pysorter.main(args)
     d.compare(expected=expected)
+
+
+@helper.tempdir
+def test_crash_on_nonexistent_source(d):
+    with pytest.raises(OSError):
+        args = ['tosort']
+        pysorter.main(args)
+
+
+@helper.tempdir
+def test_file_as_directory(d):
+    with pytest.raises(OSError):
+        d.write('file', b'')
+        args = ['file']
+        pysorter.main(args)
