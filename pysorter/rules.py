@@ -83,7 +83,7 @@ class RulesFileRule(BaseRule):
             if is_string(item[1]):
                 # XXX remove after debugging
                 item[1] = make_regex_rule_function(item[0], item[1])
-            elif item[1] in action:
+            elif item[1] in action.actionset:
                 item[1] = make_return_function(item[1])
             elif callable(item[1]):
                 pass
@@ -98,8 +98,9 @@ class RulesFileRule(BaseRule):
         return cls(rules)
 
 def make_return_function(action):
-    def function(path):
+    def function(match, path):
         return action
+    return function
 
 def make_regex_rule_function(pattern, dstfmt):
     """

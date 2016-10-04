@@ -34,7 +34,6 @@ def validate_arguments(args):
     if args.unhandled_file:
         args.unhandled_file = os.path.abspath(args.unhandled_file)
 
-
     return args
 
 

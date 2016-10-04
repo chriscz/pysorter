@@ -12,12 +12,10 @@ from .. import filesystem as fs
 
 log = logging.getLogger(__name__)
 
-
 class PySorter(object):
     def __init__(self,
                  source_dir,
                  sort_rule,
-                 unknown_suffix=None,
                  no_process=None,
                  dest_dir=None,
 
@@ -50,11 +48,9 @@ class PySorter(object):
             if not set, it will be set to `source_dir`
 
         """
-        self.unknown_file_suffix = unknown_suffix or "_files"
-
         dest_dir = dest_dir or source_dir
 
-        if os.path.exists(source_dir) and not os.path.isdir(source_dir):
+        if not os.path.isdir(source_dir):
             raise OSError("Directory to organize does not exist or is a file: {}".format(source_dir))
 
         if not os.path.isdir(dest_dir):
@@ -88,10 +84,6 @@ class PySorter(object):
         if retval in action.actionset:
             raise retval()
         return retval
-
-    def unknown_ext_dirname(self, extension):
-        """Returns the destination directory name for a file with unknown extension"""
-        return extension.lower() + self.unknown_file_suffix
 
     @fs.save_cwd
     def organize(self):
@@ -151,7 +143,8 @@ class PySorter(object):
             return
         except action.SkipRecurse:
             if path.endswith('/'):
-                self.no_recurse.add(path)
+                # we have to strip the trailing slash in this instance
+                self.no_recurse.add(path[:-1])
             return
 
         if os.path.exists(dst):
