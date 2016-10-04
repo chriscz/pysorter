@@ -21,6 +21,17 @@ given pattern.
     This applies similarly to directories
 
 """
+
+# general matching rule
+DIRECTORIES = (r'(^|/)(?P<name>[^/]+)/$', 'directories/{name}')
+FILES_WITH_EXTENSION = (r'(^|/)(?P<name>[^/]+)\.(?P<ext>[^/]+)$', 'other/{ext}_files/')
+FILES_WITHOUT_EXTENSION = (r'(^|/)(?P<name>[^/]+)$', 'other/')
+
+
+def impossible(match, path):
+    raise RuntimeError("This pattern should never match a path: {}".format(path))
+
+
 RULES = [
     (r'\.a2w$', 'alice_projects/'),
     (r'\.gz$', 'archives/'),
@@ -125,4 +136,10 @@ RULES = [
     (r'\.aswcs$', 'avast/themes/'),
     (r'\.vcf$', 'contacts/'),
     (r'\.cer$', 'certificates/'),
+
+    # wildcard patterns
+    DIRECTORIES,
+    FILES_WITH_EXTENSION,
+    FILES_WITHOUT_EXTENSION,
+    ('.*', impossible)
 ]

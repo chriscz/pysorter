@@ -9,85 +9,30 @@ from testfixtures import TempDirectory, tempdir
 from ..core import pysorter
 
 
-def test_noargs():
-    """
-    test the script when no other arguments than the directory to sort and
-    the filetypes.py file are specified
-
-    >>> assert False
-    """
-    with TempDirectory() as d:
-        os.chdir(d.path)
-        filetypes = {
-            '.*\\.pdf$': 'docs/'
-        }
-
-        to_sort = 'source/'
-
-        to_make = ['file.pdf']
-
-        helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
-
-        args = [to_sort, '--filetypes', 'filetypes.py']
-        pysorter.main(args)
-
-        # --- compare sorted
-        expected = ['docs/',
-                    'docs/file.pdf',
-                    'other/',
-                    'directories/']
-
-        d.compare(expected=expected, path=to_sort)
-
-
-def test_captures_1():
-    with TempDirectory() as d:
-        os.chdir(d.path)
-        filetypes = {
-            '.*\\.pdf$': 'docs/',
-            '([^_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
-        }
-
-        to_sort = 'source/'
-
-        to_make = ['file.pdf',
-                   'awesome_song.mp3']
-
-        helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
-
-        args = [to_sort, '--filetypes', 'filetypes.py']
-        pysorter.main(args)
-
-        # --- compare sorted
-        expected = ['docs/',
-                    'docs/file.pdf',
-                    'music/',
-                    'music/awesome/',
-                    'music/awesome/song.mp3',
-                    'other/',
-                    'directories/']
-        d.compare(expected=expected, path=to_sort)
-
-
 @helper.tempdir
-def test_non_existing_directory(d):
-    os.chdir(d.path)
-    args = ['tosort']
+def test_sort_only_filetypes_arg(d):
+    filetypes = {
+        '.*\\.pdf$': 'docs/'
+    }
+
+    to_sort = 'source/'
+
+    to_make = ['file.pdf']
+
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+
+    args = [to_sort, '--filetypes', 'filetypes.py']
     pysorter.main(args)
 
+    # --- compare sorted
+    expected = ['docs/',
+                'docs/file.pdf']
 
-@helper.tempdir
-def test_file_as_directory(d):
-    with pytest.raises(OSError):
-        os.chdir(d.path)
-        d.write('file', b'')
-        args = ['file']
-        pysorter.main(args)
+    d.compare(expected=expected, path=to_sort)
 
 
 @helper.tempdir
 def test_recursive_sort(d):
-    os.chdir(d.path)
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^/_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -115,15 +60,12 @@ def test_recursive_sort(d):
                 'music/awesome/',
                 'music/awesome/song.mp3',
                 'music/another/',
-                'music/another/song.mp3',
-                'other/',
-                'directories/']
+                'music/another/song.mp3']
     d.compare(expected=expected, path=to_sort)
 
 
 @helper.tempdir
 def test_recursive_sort_with_directory_processing(d):
-    os.chdir(d.path)
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^/_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -151,15 +93,12 @@ def test_recursive_sort_with_directory_processing(d):
                 'music/awesome/',
                 'music/awesome/song.mp3',
                 'music/another/',
-                'music/another/song.mp3',
-                'other/',
-                'directories/']
+                'music/another/song.mp3']
     d.compare(expected=expected, path=to_sort)
 
 
 @helper.tempdir
 def test_clean_empty(d):
-    os.chdir(d.path)
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^/_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -188,36 +127,9 @@ def test_clean_empty(d):
 
 
 @helper.tempdir
-def test_other_files(d):
-    os.chdir(d.path)
+def test_duplicate_recursive(d):
     filetypes = {
-        '.*\\.pdf$': 'docs/',
-        '([^_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
-    }
-
-    to_sort = 'files'
-
-    to_make = ['300.mp4', ]
-
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
-
-    args = [to_sort, '--filetypes', 'filetypes.py']
-    pysorter.main(args)
-
-    # --- compare sorted
-    expected = [
-        'directories/',
-        'other/',
-        'other/mp4_files/',
-        'other/mp4_files/300.mp4'
-    ]
-    d.compare(expected=expected, path=to_sort)
-
-
-@helper.tempdir
-def test_duplicate(d):
-    os.chdir(d.path)
-    filetypes = {
+        '\.mp4$': 'mp4_files/'
     }
 
     to_sort = 's'
@@ -231,43 +143,16 @@ def test_duplicate(d):
 
     # --- compare sorted
     expected = [
-        'directories/',
         'movie/',
         'movie/300.mp4',
-        'other/',
-        'other/mp4_files/',
-        'other/mp4_files/300.mp4'
+        'mp4_files/',
+        'mp4_files/300.mp4'
     ]
     d.compare(expected=expected, path=to_sort)
 
 
 @helper.tempdir
-def test_no_extension(d):
-    os.chdir(d.path)
-    filetypes = {
-    }
-
-    to_sort = 'files/'
-
-    to_make = ['no_extension', ]
-
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
-
-    args = [to_sort, '-r', '--filetypes', 'filetypes.py']
-    pysorter.main(args)
-
-    # --- compare sorted
-    expected = [
-        'directories/',
-        'other/',
-        'other/no_extension'
-    ]
-    d.compare(expected=expected, path=to_sort)
-
-
-@helper.tempdir
-def test_no_recurse_dir(d):
-    os.chdir(d.path)
+def test_process_dirs_no_rules(d):
     filetypes = {}
 
     to_sort = 'files/'
@@ -283,11 +168,9 @@ def test_no_recurse_dir(d):
     pysorter.main(args)
 
     # --- compare sorted
-    expected = [
-                   'directories/',
-                   'other/',
-               ] + helper.build_path_tree(to_make, 'directories/')
+    expected = [] + helper.build_path_tree(to_make)
     d.compare(expected=expected, path=to_sort)
+
 
 def test_print_version(capsys):
     try:
@@ -295,8 +178,8 @@ def test_print_version(capsys):
         assert False, 'did not print out version.'
     except SystemExit:
         out, err = capsys.readouterr()
-        from .. import __version__ 
-        
+        from .. import __version__
+
         # Python 3.4 & 3.5 print out the version on  stdout instead
         # of stderr.
         try:
@@ -307,7 +190,6 @@ def test_print_version(capsys):
 
 @helper.tempdir
 def test_write_unknown_types_correct(d):
-    os.chdir(d.path)
     filetypes = {
         r'\.pdf$': 'docs/'
     }
@@ -315,7 +197,7 @@ def test_write_unknown_types_correct(d):
     unknown = 'unknown.txt'
     to_sort = 'files/'
 
-    u_files = ['movie.mp4', 'kerry.mp3', 'phantom.mp3']
+    u_files = ['movie.mp4', 'kerry.mp3', 'phantom.mp3', ('direct', ['a.pdf'])]
     to_make = ['thesis.pdf'] + u_files
 
     helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
@@ -326,8 +208,25 @@ def test_write_unknown_types_correct(d):
 
     data = set(_ for _ in d.read(unknown, encoding="utf8").split('\n') if _)
 
-    u_exts = (os.path.splitext(_)[1] for _ in u_files if _[1])
-    u_exts = set(_[1:] for _ in u_exts)
+    unhandled = {'movie.mp4', 'kerry.mp3', 'phantom.mp3', 'direct/a.pdf', 'direct/'}
+    assert not data.difference(unhandled)
 
 
-    assert len(data) == len(u_exts) and not data.difference(u_exts)
+@helper.tempdir
+def test_absolute_path(d):
+    filetypes = {
+        r'.*': d.path + '/files/docs/'
+    }
+
+    to_sort = 'files/'
+
+    to_make = ['movie.mp4', 'kerry.mp3', 'phantom.mp3', ('direct', ['a.pdf'])]
+
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+
+    args = [to_sort, '--filetypes', 'filetypes.py', '--process-dirs']
+    pysorter.main(args)
+
+    # --- compare sorted
+    expected = helper.build_path_tree(to_make, 'docs/') + ['docs/']
+    d.compare(expected=expected, path=to_sort)
