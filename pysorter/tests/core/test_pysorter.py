@@ -1,16 +1,14 @@
 from __future__ import print_function
-import os
 
+import os
 import pytest
 
-from . import helper
-from testfixtures import tempdir
-
-from ..core import pysorter
+from .. import helper
+from ...core import pysorter
 
 
 @helper.tempdir
-def test_bad_filetypes(d):
+def test_bad_filetypes_file(d):
     os.chdir(d.path)
     filetypes = {}
 

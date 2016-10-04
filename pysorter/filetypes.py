@@ -125,4 +125,9 @@ RULES = [
     (r'\.aswcs$', 'avast/themes/'),
     (r'\.vcf$', 'contacts/'),
     (r'\.cer$', 'certificates/'),
+
+    # general matching rule
+    (r'^(?P<name>[^/]+)/$', 'directories/{name}'),
+    (r'^(?P<name>[^/]+)\.(?<ext>[^/]+)$', 'other/{ext} files/'),
+    (r'^(?P<name>[^/]+)$', 'other/')
 ]
