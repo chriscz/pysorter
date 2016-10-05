@@ -1,0 +1,17 @@
+# Installed pysorter in development mode, using
+pip install -e .   # install package using setup.py in editable mode
+
+# for testing coverage
+py.test --cov-report html:$PWD/htmlcov --cov=pysorter
+ptw --runner py.test --cov-report html:$PWD/htmlcov --cov=pysorter
+
+# look at the following
+# setup.cfg --> contains configuration for pytest and pytest watch
+
+# Using twine for doing setup.py stuff
+# https://packaging.python.org/distributing/
+
+# build and deploy
+rm -r dist/*
+python setup.py sdist bdist_wheel
+twine upload dist/*

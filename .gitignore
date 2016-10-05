@@ -1,1 +1,21 @@
+/coverage_report
+/build
+.coverage
+.eggs
+.cache
 *.pyc
+*.egg
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+#virtualenvironment
+/venv
+
+# coverage results
+/coverage_report/
+
+/tmp/

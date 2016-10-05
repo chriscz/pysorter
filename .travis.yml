@@ -1,0 +1,29 @@
+language: python
+
+sudo: false
+
+python:
+ - "3.5"
+ - "3.4"
+ - "3.3"
+ - "2.7"
+
+install: 
+    - pip install -Ue .[test,build]
+    - pip install coveralls
+
+script: 
+    - coverage run --source pysorter setup.py test
+
+after_success:
+- coveralls
+
+deploy:
+  provider: pypi
+  user: chriscz
+  password:
+    secure: CY70Zn8RwN1MbCxJCnoM9x4+B9YNsdsbZwf3+cAlptTdLXcrXWXnQsv+isbsCnonpnlf4co11kQWOgmD4lH4EgX0WTrpHjso3Gz+CbpX81aVqWWRHJlNJ2YRxbIbYePlr6rzjhzSOxGjYfwbbIza/OYWPr0cULyhEqW3QMsZKcGlq4Z9MSRt0uX+tjCy9Fbx9UAq7acO1t8u5fZvCjdQW9sn0ZtMT6yR9T6mAN1ZjWpPUmMcx8nkdyyPbIw5q0Ipbr04DrIWpT4NjnuakvVH7oOZWBzTxp6MPgnGE2WS4pXRPXjtbJPjdp14eJxKUyX6lMM1jbhvm44ePK2JkcjunL5LvnX891H1GWk2kGMHsCDDCv7Rw4mxktx4VaZz7uyzAkVtp14bciGI9BK0qVWK84SEs+OHcOUGhOVnTxllTlKmZoBKlayqavC2AiHRYYsG2gqAAIFxIVD1uuI7pXQFjhKDvay6bh5GrErNS0D1O1dbmiuV5PJdvw+s05Yoocvm28j7tzkBj8BhzQoDD3hDPQlm114koYKTjI0Ve2nIRbeKUxJ33hiiD+ZcV4S42njVBcpyyKZYXg8uFI4Pw7RzS5z25zfgqISdxC764/rSAbiVK4L4Ux6WNSXZkURuJs1IwmV3ippDbKA87IfdwXldMY/8QZRdlihXrJUAUOJktsU=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: chriscz/pysorter

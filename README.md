@@ -1,30 +1,39 @@
-pySorter
+[![Build Status](https://travis-ci.org/chriscz/pysorter.svg?branch=master)](https://travis-ci.org/chriscz/pysorter)
+[![Coverage Status](https://coveralls.io/repos/github/chriscz/pysorter/badge.svg?branch=master)](https://coveralls.io/github/chriscz/pysorter?branch=master)
+
+Pysorter
 ========
+Commandline utility for organizing files into predefined directories according to their filetype.
 
-Sorts files in a directory into predefined directories according to their filetype.
+To add your own sorting rules make a copy of  `pysorter/filetypes.py`.
+The file is a normal python scripy with a dictionary definition `RULES`,
+in the global scope. Rules are tuples of the form (regex_string, callable or string).
+For more information, read the comment in the `filetypes.py` file.
 
-pySorter sorts files in a given directory into predefined directories according to their file type.
-pySorter makes use of python's shutil library to move files and directories. 
-As stated in the documentation, the shutil library may not copy all file metadata.
-
-## Requirements
-
-Python 2.6 or higher. Tested on 2.7
-
-## Issues
-In earlier versions of pySorter, python's shutil.move(), failed to move certain files. The cause of this issue is currently unknown.
+As stated in the python documentation, the shutil library may not copy all file metadata.
+This will not affect the content of your files, however
 
 ## Quick Start
-  * Download pySorter
-  * Extract
-  * Run from terminal, specifying the directory to be sorted
+  * `pip install pysorter`
+  * `pysorter`
+
+# Requirements
+Python version:
+ * 2.7
+ * 3.3
+ * 3.4
+ * 3.5
 
 ## Releases / Revisions / Changes 
 
 The following will be kept for historical reasons. The future numbering of releases will 
 follow a form of semantic versioning.
 
-### Alpha Release 4.0.2 (Repository) 
+### Alpha Release 0.0.5 (Repository) 
+  * Change version numbering to something more sensible
+  * Add setup.py script
+
+### Alpha Release 4.0.2
   * Tested on Windows
   * Refactoring
   * Started rewriting filetypes.txt
@@ -39,7 +48,7 @@ follow a form of semantic versioning.
   * Python2.7 compatibility
   * *Issues*
     * Exceptions that are not handled
-      * Write/Read permission denied on move
+      * Write/Read permission denied on move_dir
     * Not yet tested on Windows
         
 ### Fifth Revision: 11 June 201
