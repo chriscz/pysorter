@@ -44,6 +44,9 @@ class PySorter(object):
         do_remove_empty_dirs : boolean
             toggles recursive empty directory removal
 
+        do_track: boolean
+            print out movements to the console
+
         dest_dir: string
             the directory to organize your files into, instead of doing it in-place,
             if not set, it will be set to `source_dir`
