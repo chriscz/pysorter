@@ -172,6 +172,7 @@ def test_process_dirs_no_rules(d):
     d.compare(expected=expected, path=to_sort)
 
 
+
 def test_print_version(capsys):
     try:
         pysorter.main(['--version'])
@@ -211,6 +212,22 @@ def test_write_unknown_types_correct(d):
     unhandled = {'movie.mp4', 'kerry.mp3', 'phantom.mp3', 'direct/a.pdf', 'direct/'}
     assert not data.difference(unhandled)
 
+@helper.tempdir
+def test_print_movements(d):
+    filetypes = {
+        r'\.ext$': 'extensions'
+    }
+
+    dir_to_sort = 'files/'
+    file_to_sort = ['thisthatfile.ext']
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(file_to_sort, dir_to_sort))
+
+    args = [dir_to_sort, '-T', '--filetypes', 'filetypes.py']
+    try:
+        pysorter.main(args)
+    except SystemExit:
+        out, _ = capsys.readouterr()
+        assert out == 'files/thisthatfile.ext --> files/extensions/thisthatfile.ext'
 
 @helper.tempdir
 def test_absolute_path(d):
