@@ -1,5 +1,6 @@
 # How to contribute  (Hacktoberfest)
 To contribute to pysorter you must do the following:
+
 1. Create an issue or comment on one, to indicate your interest in 
 solving a problem
 2. If the maintainer says it's fine, the issue will be assigned to you.
