@@ -78,6 +78,11 @@ def parse_args(args=None):
                         version=__version__,
                         help='Prints out the current version of pysorter')
 
+    parser.add_argument('-v', '--verbose',
+                        action='store_true',
+                        dest='do_track',
+                        help='Prints all file movements to the console')
+
     return validate_arguments(parser.parse_args(args))
 
 

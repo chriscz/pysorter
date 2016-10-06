@@ -21,7 +21,8 @@ class PySorter(object):
 
                  do_process_dirs=False,
                  do_recurse=False,
-                 do_remove_empty_dirs=False):
+                 do_remove_empty_dirs=False,
+                 do_track=False):
         """
         Construct a new instance of PySorter for organizing some directory
         using certain parameters
@@ -73,6 +74,7 @@ class PySorter(object):
         self.do_remove_empty_dirs = do_remove_empty_dirs
         self.do_recurse = do_recurse
         self.do_process_dirs = do_process_dirs
+        self.do_track = do_track
 
     @fs.save_cwd
     def sortrule_destination(self, path):
@@ -153,6 +155,10 @@ class PySorter(object):
 
         fs.make_path(os.path.dirname(dst))
         log.info("move `%s` --> `%s`", path, dst)
+
+        if self.do_track:
+            source_path = os.path.abspath(path)
+            print("%s --> %s" % (source_path, dst))
 
         if fs.is_file(path):
             fs.move_file(path, dst)
