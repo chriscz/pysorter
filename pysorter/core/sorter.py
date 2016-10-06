@@ -18,7 +18,7 @@ class PySorter(object):
                  sort_rule,
                  no_process=None,
                  dest_dir=None,
-
+                 do_move_hiddens=False,
                  do_process_dirs=False,
                  do_recurse=False,
                  do_remove_empty_dirs=False):
@@ -73,6 +73,7 @@ class PySorter(object):
         self.do_remove_empty_dirs = do_remove_empty_dirs
         self.do_recurse = do_recurse
         self.do_process_dirs = do_process_dirs
+        self.do_move_hiddens = do_move_hiddens
 
     @fs.save_cwd
     def sortrule_destination(self, path):
@@ -123,6 +124,9 @@ class PySorter(object):
         name = fs.name(path)
 
         try:
+            if name.starts_with('.') and not self.do_move_hiddens:
+                raise action.Skip
+
             raw_dst = self.sortrule_destination(path)
 
             # a relative destination
