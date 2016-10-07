@@ -187,7 +187,7 @@ def test_print_version(capsys):
         except AssertionError:
             assert out.strip() == __version__
 
-@helper.tempdir
+@pytest.mark.xfail
 def test_do_print_log(d):
     filetypes = {
         r'\.pdf$': 'docs/'
@@ -203,7 +203,7 @@ def test_do_print_log(d):
     try:
         pysorter.main(args)
     except SystemExit:
-        out, _ = capsys.readouterr()
+        out, err = capsys.readouterr()
         assert out == 'mv  files/file_test.pdf --> files/pdf/file_test.pdf'
 
 @helper.tempdir
