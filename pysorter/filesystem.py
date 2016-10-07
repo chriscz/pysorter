@@ -93,11 +93,11 @@ def save_cwd(function):
 #  File related
 # --------------------------------------------------------------------------
 
-def move_file(src, dst, print_log=False):
+def move_file(src, dst):
     if not os.path.isfile(src):
         raise OSError("Source path is not a file: {}".format(src))
-    if print_log: 
-        print("mv  {} --> {}".format(src, dst))
+    #print "mv  {} --> {}".format(src, dst)
+    
     shutil.move(src, dst)
 
 
@@ -105,12 +105,12 @@ def move_file(src, dst, print_log=False):
 #  Directory related
 # --------------------------------------------------------------------------
 
-def move_dir(src, dst, print_log=False):
+def move_dir(src, dst, do_print_log=False):
     """Moves the source directory INTO the destination"""
     if not os.path.isdir(src):
         raise OSError("Source path is not a directory: {}".format(src))
-    if print_log: 
-        print("mvd {} --> {}".format(src, dst))
+    #print "mvd {} --> {}".format(src, dst)
+    
     shutil.move(src, dst)
 
 def remove_empty_dirs(path):

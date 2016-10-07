@@ -76,7 +76,7 @@ def parse_args(args=None):
     parser.add_argument('-l', '--log', 
                         help='Print all the actions that were taken to stdout.',
                         action='store_true',
-                        dest='print_log')
+                        dest='do_print_log')
 
     parser.add_argument('-V', '--version',
                         action='version',
