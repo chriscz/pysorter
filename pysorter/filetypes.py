@@ -110,6 +110,7 @@ RULES = [
     (r'\.pptx$', 'documents/presentations/'),
     (r'\.txt$', 'documents/plain_text/'),
     (r'\.pdf$', 'documents/pdf/'),
+    (r'\.xps$', 'documents/xps/'),
     (r'\.msg$', 'documents/email/outlook/'),
     (r'\.msi$', 'installers/microsoft/'),
     (r'\.deb$', 'installers/debian/'),
