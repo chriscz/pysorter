@@ -105,6 +105,7 @@ RULES = [
     (r'\.wpd$', 'documents/writing/'),
     (r'\.wps$', 'documents/writing/'),
     (r'\.odb$', 'documents/databases/'),
+    (r'\.key$', 'documents/presentations/'),
     (r'\.pps$', 'documents/presentations/'),
     (r'\.ppt$', 'documents/presentations/'),
     (r'\.pptx$', 'documents/presentations/'),
