@@ -187,6 +187,24 @@ def test_print_version(capsys):
         except AssertionError:
             assert out.strip() == __version__
 
+@pytest.mark.xfail
+def test_do_print_log(d):
+    filetypes = {
+        r'\.pdf$': 'docs/'
+    }
+
+    files = ['file_test.pdf']
+    to_sort = 'files/'
+
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(files, to_sort))
+
+    args = [to_sort, '-l', '--log', 'filetypes.py']
+
+    try:
+        pysorter.main(args)
+    except SystemExit:
+        out, err = capsys.readouterr()
+        assert out == 'mv  files/file_test.pdf --> files/pdf/file_test.pdf'
 
 @helper.tempdir
 def test_write_unknown_types_correct(d):

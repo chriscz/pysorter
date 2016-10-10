@@ -97,6 +97,7 @@ def move_file(src, dst):
     if not os.path.isfile(src):
         raise OSError("Source path is not a file: {}".format(src))
     #print "mv  {} --> {}".format(src, dst)
+    
     shutil.move(src, dst)
 
 
@@ -104,11 +105,12 @@ def move_file(src, dst):
 #  Directory related
 # --------------------------------------------------------------------------
 
-def move_dir(src, dst):
+def move_dir(src, dst, do_print_log=False):
     """Moves the source directory INTO the destination"""
     if not os.path.isdir(src):
         raise OSError("Source path is not a directory: {}".format(src))
     #print "mvd {} --> {}".format(src, dst)
+    
     shutil.move(src, dst)
 
 def remove_empty_dirs(path):

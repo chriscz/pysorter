@@ -73,12 +73,17 @@ def parse_args(args=None):
                         action='store_true',
                         dest='do_remove_empty_dirs')
 
+    parser.add_argument('-l', '--log', 
+                        help='Print all the actions that were taken to stdout.',
+                        action='store_true',
+                        dest='do_print_log')
+
     parser.add_argument('-V', '--version',
                         action='version',
                         version=__version__,
                         help='Prints out the current version of pysorter')
 
-    return validate_arguments(parser.parse_args(args))
+    return validate_arguments(parser.parse_args(args)) 
 
 
 def main(args=None):
