@@ -93,23 +93,28 @@ def save_cwd(function):
 #  File related
 # --------------------------------------------------------------------------
 
-def move_file(src, dst):
+def move_file(src, dst, print_changes):
     if not os.path.isfile(src):
         raise OSError("Source path is not a file: {}".format(src))
-    #print "mv  {} --> {}".format(src, dst)
-    shutil.move(src, dst)
+    if print_changes:
+        print("mv {} --> {}".format(src,dst))
+    else:
+        shutil.move(src, dst)
 
 
 # --------------------------------------------------------------------------
 #  Directory related
 # --------------------------------------------------------------------------
 
-def move_dir(src, dst):
+def move_dir(src, dst, print_changes):
     """Moves the source directory INTO the destination"""
     if not os.path.isdir(src):
         raise OSError("Source path is not a directory: {}".format(src))
     #print "mvd {} --> {}".format(src, dst)
-    shutil.move(src, dst)
+    if print_changes:
+        print("mv {} --> {}".format(src,dst))
+    else:
+        shutil.move(src, dst)
 
 def remove_empty_dirs(path):
     """Recursively removes empty direcotries contained within path"""
@@ -121,6 +126,7 @@ def remove_empty_dirs(path):
 
 
 def make_path(path):
+    print("This is where the paths are created")
     """Creates intermediary directories so that the path exists"""
     path = os.path.abspath(path)
     if os.path.exists(path) and not os.path.isdir(path):
