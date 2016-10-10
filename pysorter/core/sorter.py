@@ -21,7 +21,8 @@ class PySorter(object):
 
                  do_process_dirs=False,
                  do_recurse=False,
-                 do_remove_empty_dirs=False):
+                 do_remove_empty_dirs=False,
+                 do_print_changes=False):
         """
         Construct a new instance of PySorter for organizing some directory
         using certain parameters
@@ -42,6 +43,9 @@ class PySorter(object):
 
         do_remove_empty_dirs : boolean
             toggles recursive empty directory removal
+
+        do_print_changes: boolean
+            prints the directory changes without sorting
 
         dest_dir: string
             the directory to organize your files into, instead of doing it in-place,
@@ -71,6 +75,7 @@ class PySorter(object):
         self.no_recurse = set()
 
         self.do_remove_empty_dirs = do_remove_empty_dirs
+        self.do_print_changes = do_print_changes
         self.do_recurse = do_recurse
         self.do_process_dirs = do_process_dirs
 
@@ -112,6 +117,7 @@ class PySorter(object):
                 filter_no_process(base, dirs, skipset=self.no_recurse)
                 self.no_recurse = set() # clear out
 
+
             if not self.do_recurse:
                 del dirs[:]
 
@@ -151,10 +157,11 @@ class PySorter(object):
             log.info("destination exists: `%s` --> `%s`", path, dst)
             return
 
-        fs.make_path(os.path.dirname(dst))
+        if self.do_print_changes == False:
+            fs.make_path(os.path.dirname(dst))
         log.info("move `%s` --> `%s`", path, dst)
 
         if fs.is_file(path):
-            fs.move_file(path, dst)
+            fs.move_file(path, dst, self.do_print_changes)
         else:
-            fs.move_dir(path, dst)
+            fs.move_dir(path, dst, self.do_print_changes)
