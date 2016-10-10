@@ -15,8 +15,9 @@ git add --all .
 git commit -a
 git push origin issue_78 --set-upstream
 ```
-5. Write some tests to ensure that you covered your code.
-6. Run `python setup.py coverage` to see if all your tests pass.
-Open `coverage_report/index.html` in your browser. 
-7. Push yur branch to github
-8. Create a pull-request for merging your branch
+5. Write some tests to ensure that the code coverage for the project isn't lowered.
+6. Run `python setup.py coverage` to see that your tests pass.  Open `coverage_report/index.html` for
+a full coverage report.
+7. Push your branch to github.
+8. Create a pull-request for merging your branch.
+9. Wait for feedback from the maintainer.
