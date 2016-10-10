@@ -97,7 +97,7 @@ def move_file(src, dst, print_changes):
     if not os.path.isfile(src):
         raise OSError("Source path is not a file: {}".format(src))
     if print_changes:
-        print("mv {} --> {}".format(src,dst))
+        print("move {} --> {}".format(src,dst))
     else:
         shutil.move(src, dst)
 
@@ -112,7 +112,7 @@ def move_dir(src, dst, print_changes):
         raise OSError("Source path is not a directory: {}".format(src))
     #print "mvd {} --> {}".format(src, dst)
     if print_changes:
-        print("mv {} --> {}".format(src,dst))
+        print("move {} --> {}".format(src,dst))
     else:
         shutil.move(src, dst)
 
