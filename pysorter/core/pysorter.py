@@ -68,6 +68,11 @@ def parse_args(args=None):
                         action='store_true',
                         dest='do_recurse')
 
+    parser.add_argument('U', '--move_hidden_files',
+                        help="Move hidden files",
+                        action='store_true',
+                        dest='do_move_hiddens')
+
     parser.add_argument('-c', '--remove-empty-dirs',
                         help='Recursively removes all empty directories in the directory being organized.',
                         action='store_true',
