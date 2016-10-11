@@ -126,7 +126,6 @@ def remove_empty_dirs(path):
 
 
 def make_path(path):
-    print("This is where the paths are created")
     """Creates intermediary directories so that the path exists"""
     path = os.path.abspath(path)
     if os.path.exists(path) and not os.path.isdir(path):
