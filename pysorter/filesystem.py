@@ -3,9 +3,13 @@ from __future__ import print_function
 import logging
 import os
 import shutil
+import json
+import time
 
 log = logging.getLogger(__name__)
 
+files = {}
+teller = 0
 
 # --------------------------------------------------------------------------
 #  Canonical path functions
@@ -94,13 +98,18 @@ def save_cwd(function):
 # --------------------------------------------------------------------------
 
 def move_file(src, dst, print_changes):
+    global teller
     if not os.path.isfile(src):
         raise OSError("Source path is not a file: {}".format(src))
     if print_changes:
-        print("move {} --> {}".format(src,dst))
+        if dst in files.itervalues():
+            print("skip {}".format(src))
+        else:
+            files[teller] = dst
+            teller += 1
+            print("move {} --> {}".format(src,dst))
     else:
         shutil.move(src, dst)
-
 
 # --------------------------------------------------------------------------
 #  Directory related
@@ -108,11 +117,17 @@ def move_file(src, dst, print_changes):
 
 def move_dir(src, dst, print_changes):
     """Moves the source directory INTO the destination"""
+    global teller
     if not os.path.isdir(src):
         raise OSError("Source path is not a directory: {}".format(src))
     #print "mvd {} --> {}".format(src, dst)
     if print_changes:
-        print("move {} --> {}".format(src,dst))
+        if dst in files.itervalues():
+            print("skip {}".format(src))
+        else:
+            files[teller] = dst
+            teller += 1
+            print("move {} --> {}".format(src,dst))
     else:
         shutil.move(src, dst)
 
