@@ -79,6 +79,9 @@ class PySorter(object):
         self.do_recurse = do_recurse
         self.do_process_dirs = do_process_dirs
 
+        self.teller = 0
+        self.files = {}
+
     @fs.save_cwd
     def sortrule_destination(self, path):
         """
@@ -159,9 +162,25 @@ class PySorter(object):
 
         if self.do_print_changes == False:
             fs.make_path(os.path.dirname(dst))
-        log.info("move `%s` --> `%s`", path, dst)
+            log.info("move {} --> {}".format(path, dst))
 
         if fs.is_file(path):
-            fs.move_file(path, dst, self.do_print_changes)
+            if self.do_print_changes:
+                if dst in self.files.values():
+                    print("skip file {}".format(dst))
+                else:
+                    print("move file {} --> {}".format(path,dst))
+                    self.files[self.teller] = dst
+                    self.teller += 1
+            else:
+                fs.move_file(path, dst)
         else:
-            fs.move_dir(path, dst, self.do_print_changes)
+            if self.do_print_changes:
+                if dst in self.files.values():
+                    print("skip directory {}".format(dst))
+                else:
+                    print("move directory {} --> {}".format(path,dst))
+                    self.files[self.teller] = dst
+                    self.teller += 1
+            else:
+                fs.move_dir(path, dst)
