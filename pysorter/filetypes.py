@@ -22,6 +22,23 @@ given pattern.
 
 """
 
+import mimetypes
+import re
+mimetypes.init()
+
+def normalize_mimetype(mt):
+    """Normalization operations to make MIME types more human-friendly"""
+
+    # remove x- in mime type, e.g. application/x-pdf -> application/pdf
+    mt = mt.replace('/x-', '/')
+
+    return mt
+
+MIMETYPE_FALLBACKS = [
+    ('{}$'.format(re.escape(ext)), '{}/'.format(normalize_mimetype(mt)))
+    for ext, mt in mimetypes.types_map.items()
+]
+
 # general matching rule
 DIRECTORIES = (r'(^|/)(?P<name>[^/]+)/$', 'directories/{name}')
 FILES_WITH_EXTENSION = (r'(^|/)(?P<name>[^/]+)\.(?P<ext>[^/]+)$', 'other/{ext}_files/')
@@ -137,9 +154,15 @@ RULES = [
     (r'\.vcf$', 'contacts/'),
     (r'\.cer$', 'certificates/'),
 
-    # wildcard patterns
     DIRECTORIES,
+]
+
+RULES.extend(MIMETYPE_FALLBACKS)
+
+RULES.extend([
+
+    # wildcard patterns
     FILES_WITH_EXTENSION,
     FILES_WITHOUT_EXTENSION,
     ('.*', impossible)
-]
+])
