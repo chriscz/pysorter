@@ -20,7 +20,25 @@ given pattern.
 
     This applies similarly to directories
 
+    More Examples:
+        - Use predefined actions:
+          - RULE:      (r'file1\.pdf', action.Skip)
+          BEHAVIOUR: file1.pdf --> No action
+          - RULE:      (r'/pdfs/', action.SkipRecure)
+          BEHAVIOUR: /pdfs/file1.pdf --> No action
+          BEHAVIOUR: /pdfs/another/file1.pdf --> No action
+        - Numerical matching group
+          - RULE:      (r'^(\d{4})-(\d{2})-.+?\.jpg$', 'images/{0}/{1}')
+          BEHAVIOUR: 2016-03-12 13.34.21.jpg --> images/2016/03/2016-03-12 13.34.21.jpg
+        - Named matching group
+          - RULE:      (r'^(?P<year>\d{4})-(?P<month>\d{2})-.+?\.jpg$', 'images/{year}/{month}')
+          BEHAVIOUR: 2016-03-12 13.34.21.jpg --> images/2016/03/2016-03-12 13.34.21.jpg
+
+
 """
+# XXX Make sure all imports are absolute in this file, otherwise there will be
+# problems using exec in rules.py
+from pysorter import action
 
 import mimetypes
 import re
@@ -180,6 +198,7 @@ RULES.extend(MIMETYPE_FALLBACKS)
 RULES.extend([
 
     # wildcard patterns
+    DIRECTORIES,
     FILES_WITH_EXTENSION,
     FILES_WITHOUT_EXTENSION,
     ('.*', impossible)
