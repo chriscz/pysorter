@@ -188,24 +188,20 @@ def test_print_version(capsys):
             assert out.strip() == __version__
 
 
-@helper.mark.xfail
-def test_do_print_changes(d):
-    filetypes = {
-        r'\.pdf$': 'docs/'
-    }
+def test_print_changes(capsys):
+    with TempDirectory() as d:
+        filetypes = {
+            ".*\\.pdf$': 'docs/"
+        }
+        to_sort = "sourcefiles/"
+        to_make = ["file1.pdf"]
+        helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
 
-    files = ['file_test.pdf']
-    to_sort = 'files/'
-
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(files, to_sort))
-
-    args = [to_sort, '-n', '--print-changes', 'filetypes.py']
-
-    try:
+        args = [to_sort, "-n"]
         pysorter.main(args)
-    except SystemExit:
+
         out, err = capsys.readouterr()
-        assert out == 'mv files/file_test.pdf --> files/pdf/file_test.pdf'
+        assert out == "move file sourcefiles/file1.pdf --> docs/file1.pdf"
 
 
 @helper.tempdir
