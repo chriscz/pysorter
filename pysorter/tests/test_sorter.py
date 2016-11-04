@@ -2,11 +2,14 @@ from __future__ import print_function
 import os
 
 import pytest
+import logging
 
 from . import helper
 from testfixtures import TempDirectory, tempdir
 
 from ..core import pysorter
+
+import sys
 
 
 @helper.tempdir
@@ -188,22 +191,6 @@ def test_print_version(capsys):
             assert out.strip() == __version__
 
 
-def test_print_changes(capsys):
-    with TempDirectory() as d:
-        filetypes = {
-            ".*\\.pdf$': 'docs/"
-        }
-        to_sort = "sourcefiles/"
-        to_make = ["file1.pdf"]
-        helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
-
-        args = [to_sort, "-n"]
-        pysorter.main(args)
-
-        out, err = capsys.readouterr()
-        assert out == "move file sourcefiles/file1.pdf --> docs/file1.pdf"
-
-
 @helper.tempdir
 def test_write_unknown_types_correct(d):
     filetypes = {
@@ -246,3 +233,25 @@ def test_absolute_path(d):
     # --- compare sorted
     expected = helper.build_path_tree(to_make, 'docs/') + ['docs/']
     d.compare(expected=expected, path=to_sort)
+
+
+@helper.tempdir
+def pysortmine(self):
+    with TempDirectory() as d:
+        filetypes = {
+            r'\.pdf$': 'docs/'
+        }
+        to_sort = "sourcefiles/"
+        to_make = ["file1.pdf", ]
+
+        helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+        sort = d.path + "/sourcefiles/"
+        args = [sort,'-rn']
+        pysorter.main(args)
+        return d.path
+
+
+def test_print_changes(capsys):
+    p = pysortmine()
+    out, err = capsys.readouterr()
+    assert out == "move file file1.pdf --> "+p+"/sourcefiles/documents/pdf/file1.pdf\n"
