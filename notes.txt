@@ -1,5 +1,7 @@
 # Installed pysorter in development mode, using
-pip install -e .   # install package using setup.py in editable mode
+pip install -e .
+pip install -e .[test]
+pip install -e .[build]
 
 # for testing coverage
 py.test --cov-report html:$PWD/htmlcov --cov=pysorter
