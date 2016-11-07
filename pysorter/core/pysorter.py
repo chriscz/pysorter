@@ -73,6 +73,11 @@ def parse_args(args=None):
                         action='store_true',
                         dest='do_remove_empty_dirs')
 
+    parser.add_argument('-n', '--print-changes',
+                        help='Prints out all the changes for the provided directory',
+                        action='store_true',
+                        dest='do_print_changes')
+
     parser.add_argument('-V', '--version',
                         action='version',
                         version=__version__,
