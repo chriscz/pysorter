@@ -160,27 +160,23 @@ class PySorter(object):
             log.info("destination exists: `%s` --> `%s`", path, dst)
             return
 
-        if self.do_print_changes == False:
-            fs.make_path(os.path.dirname(dst))
-            log.info("move {} --> {}".format(path, dst))
-
-        if fs.is_file(path):
-            if self.do_print_changes:
+        if self.do_print_changes == True:
+            if fs.is_file(path):
                 if dst in self.files.values():
                     print("skip file {}".format(dst))
                 else:
                     print("move file {} --> {}".format(path,dst))
-                    self.files[self.teller] = dst
-                    self.teller += 1
             else:
-                fs.move_file(path, dst)
-        else:
-            if self.do_print_changes:
                 if dst in self.files.values():
                     print("skip directory {}".format(dst))
                 else:
                     print("move directory {} --> {}".format(path,dst))
-                    self.files[self.teller] = dst
-                    self.teller += 1
+            self.files[self.teller] = dst
+            self.teller += 1
+        else:
+            fs.make_path(os.path.dirname(dst))
+            log.info("move {} --> {}".format(path, dst))
+            if fs.is_file(path):
+                fs.move_file(path, dst)
             else:
                 fs.move_dir(path, dst)
