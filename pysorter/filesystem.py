@@ -96,7 +96,6 @@ def save_cwd(function):
 def move_file(src, dst):
     if not os.path.isfile(src):
         raise OSError("Source path is not a file: {}".format(src))
-    #print "mv  {} --> {}".format(src, dst)
     shutil.move(src, dst)
 
 

@@ -2,11 +2,14 @@ from __future__ import print_function
 import os
 
 import pytest
+import logging
 
 from . import helper
 from testfixtures import TempDirectory, tempdir
 
 from ..core import pysorter
+
+import sys
 
 
 @helper.tempdir
@@ -230,3 +233,27 @@ def test_absolute_path(d):
     # --- compare sorted
     expected = helper.build_path_tree(to_make, 'docs/') + ['docs/']
     d.compare(expected=expected, path=to_sort)
+
+
+@helper.tempdir
+def preparefiles(d):
+    filetypes = {
+        r'\.pdf$': 'docs/'
+    }
+    to_sort = "sourcefiles/"
+    to_make = ['file1.pdf',
+               'sub/file1.pdf',
+               'subfolder/sub/file2.pdf', ]
+
+    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    sort = d.path + "/sourcefiles/"
+    args = [sort,'-rpn']
+    pysorter.main(args)
+    return d.path
+
+
+def test_print_changes(capsys):
+    p = preparefiles()
+    out, err = capsys.readouterr()
+    assert out == "move file file1.pdf --> "+p+"/sourcefiles/documents/pdf/file1.pdf\nmove directory sub/ --> "+p+"/sourcefiles/directories/sub\nmove directory subfolder/ --> "+p+"/sourcefiles/directories/subfolder\nskip file "+p+"/sourcefiles/documents/pdf/file1.pdf\nskip directory "+p+"/sourcefiles/directories/sub\nmove file subfolder/sub/file2.pdf --> "+p+"/sourcefiles/documents/pdf/file2.pdf\n"
+
