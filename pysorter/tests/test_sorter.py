@@ -1,16 +1,11 @@
 from __future__ import print_function
 import os
 
-import pytest
-
 from . import helper
-from testfixtures import TempDirectory, tempdir
-
 from ..core import pysorter
 
 
-@helper.tempdir
-def test_sort_only_filetypes_arg(d):
+def test_sort_only_filetypes_arg(tempdir):
     filetypes = {
         '.*\\.pdf$': 'docs/'
     }
@@ -19,7 +14,7 @@ def test_sort_only_filetypes_arg(d):
 
     to_make = ['file.pdf']
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py']
     pysorter.main(args)
@@ -28,11 +23,10 @@ def test_sort_only_filetypes_arg(d):
     expected = ['docs/',
                 'docs/file.pdf']
 
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_recursive_sort(d):
+def test_recursive_sort(tempdir):
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^/_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -44,7 +38,7 @@ def test_recursive_sort(d):
                'awesome_song.mp3',
                'foo/another_song.mp3', ]
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '--filetypes', 'filetypes.py']
     pysorter.main(args)
@@ -61,11 +55,10 @@ def test_recursive_sort(d):
                 'music/awesome/song.mp3',
                 'music/another/',
                 'music/another/song.mp3']
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_recursive_sort_with_directory_processing(d):
+def test_recursive_sort_with_directory_processing(tempdir):
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^/_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -77,7 +70,7 @@ def test_recursive_sort_with_directory_processing(d):
                'awesome_song.mp3',
                'foo/another_song.mp3', ]
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '--filetypes', 'filetypes.py', '--process-dirs']
     pysorter.main(args)
@@ -94,11 +87,10 @@ def test_recursive_sort_with_directory_processing(d):
                 'music/awesome/song.mp3',
                 'music/another/',
                 'music/another/song.mp3']
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_clean_empty(d):
+def test_clean_empty(tempdir):
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^/_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -110,7 +102,7 @@ def test_clean_empty(d):
                'awesome_song.mp3',
                'foo/another_song.mp3', ]
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '-c', '--filetypes', 'filetypes.py']
     pysorter.main(args)
@@ -123,11 +115,10 @@ def test_clean_empty(d):
                 'music/awesome/song.mp3',
                 'music/another/',
                 'music/another/song.mp3']
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_duplicate_recursive(d):
+def test_duplicate_recursive(tempdir):
     filetypes = {
         '\.mp4$': 'mp4_files/'
     }
@@ -136,7 +127,7 @@ def test_duplicate_recursive(d):
 
     to_make = ['s/300.mp4', 's/movie/300.mp4', ]
 
-    helper.initialize_dir(d, filetypes, to_make)
+    helper.initialize_dir(tempdir, filetypes, to_make)
 
     args = [to_sort, '-r', '--filetypes', 'filetypes.py']
     pysorter.main(args)
@@ -148,11 +139,10 @@ def test_duplicate_recursive(d):
         'mp4_files/',
         'mp4_files/300.mp4'
     ]
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_process_dirs_no_rules(d):
+def test_process_dirs_no_rules(tempdir):
     filetypes = {}
 
     to_sort = 'files/'
@@ -162,14 +152,14 @@ def test_process_dirs_no_rules(d):
                'emptydir/'
                ]
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py', '--process-dirs']
     pysorter.main(args)
 
     # --- compare sorted
     expected = [] + helper.build_path_tree(to_make)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
 def test_print_version(capsys):
@@ -188,8 +178,7 @@ def test_print_version(capsys):
             assert out.strip() == __version__
 
 
-@helper.tempdir
-def test_write_unknown_types_correct(d):
+def test_write_unknown_types_correct(tempdir):
     filetypes = {
         r'\.pdf$': 'docs/'
     }
@@ -200,33 +189,32 @@ def test_write_unknown_types_correct(d):
     u_files = ['movie.mp4', 'kerry.mp3', 'phantom.mp3', ('direct', ['a.pdf'])]
     to_make = ['thesis.pdf'] + u_files
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     # --- compare sorted
     args = [to_sort, '-u', unknown, '--filetypes', 'filetypes.py']
     pysorter.main(args)
 
-    data = set(_ for _ in d.read(unknown, encoding="utf8").split('\n') if _)
+    data = set(_ for _ in tempdir.read(unknown, encoding="utf8").split('\n') if _)
 
     unhandled = {'movie.mp4', 'kerry.mp3', 'phantom.mp3', 'direct/a.pdf', 'direct/'}
     assert not data.difference(unhandled)
 
 
-@helper.tempdir
-def test_absolute_path(d):
+def test_absolute_path(tempdir):
     filetypes = {
-        r'.*': d.path + '/files/docs/'
+        r'.*': tempdir.path + '/files/docs/'
     }
 
     to_sort = 'files/'
 
     to_make = ['movie.mp4', 'kerry.mp3', 'phantom.mp3', ('direct', ['a.pdf'])]
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py', '--process-dirs']
     pysorter.main(args)
 
     # --- compare sorted
     expected = helper.build_path_tree(to_make, 'docs/') + ['docs/']
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
