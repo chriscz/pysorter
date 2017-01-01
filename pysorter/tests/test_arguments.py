@@ -8,7 +8,6 @@ from ..core import pysorter
 
 
 def test_bad_filetypes_file(tempdir):
-    os.chdir(tempdir.path)
     filetypes = {}
 
     to_sort = 'files/'
