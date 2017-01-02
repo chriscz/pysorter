@@ -183,7 +183,6 @@ def collect_terminal_empty_dirs(root, move_tuples):
 
 
     for (src, dst) in move_tuples:
-        print("*** MOVE", src, '-->', dst)
         move(src, dst, disk_tree)
 
 
@@ -267,7 +266,6 @@ def _paths_to_tree(paths):
         >>> _paths_to_tree(['hello/cruel/world', 'hello/cruel/earth/africa'])
         {'hello': {'cruel': {'world': None, 'earth': {'africa': None}}}}
     """
-    print("PATHS", paths)
 
     tree = {}
 
