@@ -16,6 +16,7 @@ from ..rules import RulesFileRule
 
 log = logging.getLogger(__name__)
 
+_last_sorter = None  # variable used during testing
 
 def validate_arguments(args):
     """
@@ -73,6 +74,11 @@ def parse_args(args=None):
                         action='store_true',
                         dest='do_remove_empty_dirs')
 
+    parser.add_argument('-n', '--dry-run',
+                        help='Prints out the changes that would occur, without actually executing them.',
+                        action='store_true',
+                        dest='dry_run')
+
     parser.add_argument('-V', '--version',
                         action='version',
                         version=__version__,
@@ -80,8 +86,9 @@ def parse_args(args=None):
 
     return validate_arguments(parser.parse_args(args))
 
-
 def main(args=None):
+    global _last_sorter
+
     logging.basicConfig()
     args = parse_args(args)
 
@@ -96,6 +103,8 @@ def main(args=None):
 
     sorter = PySorter(args.directory, rules, **topass)
     sorter.organize()
+
+    _last_sorter = sorter
 
     # write out all the unknown file types
     if args.unhandled_file:
