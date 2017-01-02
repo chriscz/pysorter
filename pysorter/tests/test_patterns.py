@@ -8,8 +8,8 @@ from ..core import pysorter
 from .. import action
 
 
-@helper.tempdir
-def test_keyword_captures(d):
+
+def test_keyword_captures(tempdir):
     filetypes = {
         '(?P<name>\w+)_(?P<keyword>\w+)\.(?P<ext>pdf)$': '{keyword}/{name}.{ext}'
     }
@@ -17,7 +17,7 @@ def test_keyword_captures(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -26,11 +26,11 @@ def test_keyword_captures(d):
         'cruel/',
         'cruel/hello.pdf']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_numerical_captures(d):
+
+def test_numerical_captures(tempdir):
     filetypes = {
         '.*\\.pdf$': 'docs/',
         '([^_]*)_([^_]*)\\.(mp3)$': 'music/{1}/{2}.{3}'
@@ -41,7 +41,7 @@ def test_numerical_captures(d):
     to_make = ['file.pdf',
                'awesome_song.mp3']
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py']
     pysorter.main(args)
@@ -52,11 +52,11 @@ def test_numerical_captures(d):
                 'music/',
                 'music/awesome/',
                 'music/awesome/song.mp3']
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_bad_keyword_captures(d):
+
+def test_bad_keyword_captures(tempdir):
     filetypes = {
         '(?P<name>\w+)_(?P<keyword>\w+)\.(?P<ext>pdf)$': '{unknown}/{keyword}/{name}.{ext}'
     }
@@ -64,7 +64,7 @@ def test_bad_keyword_captures(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -72,8 +72,8 @@ def test_bad_keyword_captures(d):
         pysorter.main(args)
 
 
-@helper.tempdir
-def test_bad_numerical_capture(d):
+
+def test_bad_numerical_capture(tempdir):
     filetypes = {
         '(?P<name>\w+)_(?P<keyword>\w+)\.(?P<ext>pdf)$': '{keyword}/{name}.{ext}/{4}'
     }
@@ -81,7 +81,7 @@ def test_bad_numerical_capture(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -89,8 +89,8 @@ def test_bad_numerical_capture(d):
         pysorter.main(args)
 
 
-@helper.tempdir
-def test_callable_as_action(d):
+
+def test_callable_as_action(tempdir):
     def comparison_function(match, entity):
         return 'foobar/'
 
@@ -102,7 +102,7 @@ def test_callable_as_action(d):
     dest = 'sorted/'
 
     to_make = ['hello_cruel.pdf']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '-d', dest]
 
@@ -112,11 +112,11 @@ def test_callable_as_action(d):
         'foobar/',
         'foobar/hello_cruel.pdf']
     pysorter.main(args)
-    d.compare(expected=expected, path=dest)
+    tempdir.compare(expected=expected, path=dest)
 
 
-@helper.tempdir
-def test_rule_behaviour_into_directory_for_file(d):
+
+def test_rule_behaviour_into_directory_for_file(tempdir):
     filetypes = {
         '\.pdf$': 'pdf/'
     }
@@ -124,7 +124,7 @@ def test_rule_behaviour_into_directory_for_file(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -133,11 +133,11 @@ def test_rule_behaviour_into_directory_for_file(d):
         'pdf/',
         'pdf/hello_cruel.pdf']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_rule_behaviour_to_for_file(d):
+
+def test_rule_behaviour_to_for_file(tempdir):
     filetypes = {
         '.*\.pdf$': 'pdf'
     }
@@ -145,7 +145,7 @@ def test_rule_behaviour_to_for_file(d):
     to_sort = 'files/'
 
     to_make = ['hello_cruel.pdf']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
 
@@ -153,11 +153,11 @@ def test_rule_behaviour_to_for_file(d):
     expected = [
         'pdf']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_rule_behaviour_into_directory_for_dir(d):
+
+def test_rule_behaviour_into_directory_for_dir(tempdir):
     filetypes = {
         'foo/$': 'pdf/'
     }
@@ -165,7 +165,7 @@ def test_rule_behaviour_into_directory_for_dir(d):
     to_sort = 'files/'
 
     to_make = ['foo/']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs']
 
@@ -174,11 +174,11 @@ def test_rule_behaviour_into_directory_for_dir(d):
         'pdf/',
         'pdf/foo/']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_rule_behaviour_to_for_dir(d):
+
+def test_rule_behaviour_to_for_dir(tempdir):
     filetypes = {
         'foo/$': 'pdf'
     }
@@ -186,7 +186,7 @@ def test_rule_behaviour_to_for_dir(d):
     to_sort = 'files/'
 
     to_make = ['foo/']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs']
 
@@ -195,11 +195,11 @@ def test_rule_behaviour_to_for_dir(d):
         'pdf/'
     ]
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_skip_pattern_file(d):
+
+def test_skip_pattern_file(tempdir):
     filetypes = {
         '\.xml$': action.Skip,
         '\.pdf$': 'pdf/'
@@ -207,7 +207,7 @@ def test_skip_pattern_file(d):
 
     to_sort = 'files/'
     to_make = ['hello_cruel.pdf', 'config.xml']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py']
     # --- compare sorted
@@ -217,11 +217,11 @@ def test_skip_pattern_file(d):
         'config.xml'
     ]
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_skip_recurse_directory(d):
+
+def test_skip_recurse_directory(tempdir):
     filetypes = {
         'foo/$': action.SkipRecurse,
         '\.pdf$': 'pdf/'
@@ -230,7 +230,7 @@ def test_skip_recurse_directory(d):
     to_sort = 'files/'
     to_make = [('foo', ['docfoo.pdf']), ('bar', ['docbar.pdf'])]
 
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '-p', '-t', 'filetypes.py']
     # --- compare sorted
@@ -242,4 +242,4 @@ def test_skip_recurse_directory(d):
         'foo/docfoo.pdf'
     ]
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)

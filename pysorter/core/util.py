@@ -1,5 +1,8 @@
 from os.path import *
 
+def escape_singles(string):
+    """escapes all single quotes in a string"""
+    return string.replace("'", r"\'")
 
 def script_directory():
     """Returns the full path to where this script located"""
@@ -23,5 +26,5 @@ def is_string(obj):
     if PY3:
         string_types = str,
     else:
-        string_types = basestring,
+        string_types = basestring, str
     return isinstance(obj, string_types)

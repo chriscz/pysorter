@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 import os
 from .. import action
 
+import pytest
+
 
 def is_string(obj):
     import sys
@@ -149,15 +151,3 @@ def build_path_tree(paths, prefix=None):
     pathset = set()
     _build_path_tree(paths, pathset, prefix=prefix)
     return sorted(pathset)
-
-
-def tempdir(function):
-    def wrapped(*args, **kwargs):
-        from testfixtures import TempDirectory
-        with TempDirectory() as d:
-            os.chdir(d.path)
-            return function(d, *args, **kwargs)
-
-    wrapped.__name__ = function.__name__
-    wrapped.__module__ = function.__module__
-    return wrapped

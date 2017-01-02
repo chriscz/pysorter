@@ -7,8 +7,8 @@ from ..core import pysorter
 from ..filetypes import DIRECTORIES, FILES_WITHOUT_EXTENSION, FILES_WITH_EXTENSION
 
 
-@helper.tempdir
-def test_directory_pattern(d):
+
+def test_directory_pattern(tempdir):
     filetypes = {
         DIRECTORIES[0]: DIRECTORIES[1]
     }
@@ -16,7 +16,7 @@ def test_directory_pattern(d):
     to_sort = 'files/'
 
     to_make = ['foo/', 'bar/', 'nested/directory/', 'somefile']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs']
 
@@ -25,11 +25,11 @@ def test_directory_pattern(d):
     expected = helper.build_path_tree(to_make, 'directories/')
     expected += ['directories/', 'somefile']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_file_extension_pattern(d):
+
+def test_file_extension_pattern(tempdir):
     filetypes = {
         FILES_WITH_EXTENSION[0]: FILES_WITH_EXTENSION[1]
     }
@@ -38,7 +38,7 @@ def test_file_extension_pattern(d):
 
     to_make = ['movie.mp4', 'story.doc', 'archive.tar.gz', 'noextension', ('adirectory', ['secret.txt']),
                ('directory.with.dots', [''])]
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs', '-r']
 
@@ -48,11 +48,11 @@ def test_file_extension_pattern(d):
                 'other/txt_files/','other/txt_files/secret.txt',
                 'noextension', 'adirectory/', 'directory.with.dots/']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
 
 
-@helper.tempdir
-def test_file_no_extension_pattern(d):
+
+def test_file_no_extension_pattern(tempdir):
     filetypes = {
         FILES_WITHOUT_EXTENSION[0]: FILES_WITHOUT_EXTENSION[1]
     }
@@ -60,7 +60,7 @@ def test_file_no_extension_pattern(d):
     to_sort = 'files/'
 
     to_make = ['movie', 'story', 'archive', 'noextension', 'nested/file']
-    helper.initialize_dir(d, filetypes, helper.build_path_tree(to_make, to_sort))
+    helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-t', 'filetypes.py', '--process-dirs', '-r']
 
@@ -68,4 +68,4 @@ def test_file_no_extension_pattern(d):
     expected = ['other/', 'other/story', 'other/archive', 'other/movie',
                 'other/noextension', 'nested/', 'other/file']
     pysorter.main(args)
-    d.compare(expected=expected, path=to_sort)
+    tempdir.compare(expected=expected, path=to_sort)
