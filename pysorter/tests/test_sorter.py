@@ -218,3 +218,109 @@ def test_absolute_path(tempdir):
     # --- compare sorted
     expected = helper.build_path_tree(to_make, 'docs/') + ['docs/']
     tempdir.compare(expected=expected, path=to_sort)
+
+
+def test_dry_run_has_no_effect(tempdir):
+    filetypes = {
+        r'\.pdf$': 'docs/',
+        r'\.doc$': 'word/',
+    }
+
+    src_dir = 'src/'
+    dst_dir = 'dst/'
+
+    to_make = ['story.pdf',
+               'subdirectory/news.pdf',
+               'an/empty/dir/',
+               'another/',
+               'dir/story.pdf']
+
+    src_tree = helper.build_path_tree(to_make, src_dir)
+    root_tree = src_tree + [dst_dir, 'filetypes.py', src_dir]
+
+    helper.initialize_dir(tempdir, filetypes, src_tree)
+    tempdir.makedir(dst_dir)
+
+    args = [os.path.join(tempdir.path, src_dir), '-nrc', '-d', dst_dir, '-t', 'filetypes.py']
+
+    pysorter.main(args)
+    tempdir.compare(expected=root_tree, path='.')
+
+    # --- strip the common prefix from all the move (src, dst) pairs
+    move_pairs = set()
+    common = len(tempdir.path) + 1  # for the seperator
+    for (src, dst) in pysorter._last_sorter.dry_mv_tuples:
+        move_pairs.add((src[common:], dst[common:]))
+
+    rmdir_paths = set()
+    for path in pysorter._last_sorter.dry_rmdir:
+        rmdir_paths.add(path[common:])
+
+    assert len(move_pairs) == 2
+    assert ('src/story.pdf', 'dst/docs/story.pdf') in move_pairs
+    assert ('src/subdirectory/news.pdf', 'dst/docs/news.pdf') in move_pairs
+
+    assert 'src/subdirectory' in rmdir_paths
+    assert 'src/an/empty/dir' in rmdir_paths
+    assert 'src/an/empty' in rmdir_paths
+    assert 'src/an' in rmdir_paths
+    assert 'src/another'in rmdir_paths
+    assert len(rmdir_paths) == 5
+
+
+
+def test_dry_run_with_directory_move(tempdir):
+    filetypes = {
+        r'\.pdf$': 'docs/',
+        r'\.doc$': 'word/',
+        r'r/$': 'directories/'
+    }
+
+    src_dir = 'src/'
+    dst_dir = 'dst/'
+
+    to_make = ['story.pdf',
+               'subdirectory/news.pdf',
+               'an/empty/dir/',
+               'another/',
+               'stories/deep/books/book.pdf']
+
+    src_tree = helper.build_path_tree(to_make, src_dir)
+    root_tree = src_tree + [dst_dir, 'filetypes.py', src_dir]
+
+    helper.initialize_dir(tempdir, filetypes, src_tree)
+    tempdir.makedir(dst_dir)
+
+    args = [os.path.join(tempdir.path, src_dir), '-nrcp', '-d', dst_dir, '-t', 'filetypes.py']
+
+    pysorter.main(args)
+    tempdir.compare(expected=root_tree, path='.')
+
+    # --- strip the common prefix from all the move (src, dst) pairs
+    move_pairs = set()
+    common = len(tempdir.path) + 1  # for the seperator
+    for (src, dst) in pysorter._last_sorter.dry_mv_tuples:
+        move_pairs.add((src[common:], dst[common:]))
+
+    rmdir_paths = set()
+    for path in pysorter._last_sorter.dry_rmdir:
+        rmdir_paths.add(path[common:])
+
+    assert len(move_pairs) == 5
+    assert ('src/stories/deep/books/book.pdf', 'dst/docs/book.pdf') in move_pairs
+    assert ('src/story.pdf', 'dst/docs/story.pdf') in move_pairs
+    assert ('src/subdirectory/news.pdf', 'dst/docs/news.pdf') in move_pairs
+    assert ('src/an/empty/dir/', 'dst/directories/dir') in move_pairs
+    assert ('src/another/', 'dst/directories/another') in move_pairs
+
+    should_be_removed = [
+        'src/subdirectory',
+        'src/an',
+        'src/an/empty',
+        'src/stories',
+        'src/stories/deep',
+        'src/stories/deep/books',
+    ]
+
+    assert set(should_be_removed) == rmdir_paths
+
