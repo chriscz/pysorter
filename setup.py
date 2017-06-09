@@ -31,7 +31,7 @@ setup(
     },
 
     entry_points={
-        "console_scripts": ['pysorter=pysorter.core.pysorter:main']
+        "console_scripts": ['pysorter=pysorter.commandline:main']
     },
     extras_require=dict(
         build=['twine', 'wheel', 'setuptools-git', 'sphinx'],
