@@ -34,7 +34,7 @@ setup(
         "console_scripts": ['pysorter=pysorter.core.pysorter:main']
     },
     extras_require=dict(
-        build=['twine', 'wheel', 'setuptools-git'],
+        build=['twine', 'wheel', 'setuptools-git', 'sphinx'],
         test=['pytest', 'testfixtures', 'pytest-cov'],
     ),
     classifiers=[
