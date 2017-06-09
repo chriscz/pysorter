@@ -61,11 +61,6 @@ def is_file(path):
     """
     return not path.endswith('/')
 
-
-def extension(path):
-    return os.path.splitext(path)[1]
-
-
 def name(path):
     """
     Return the name of the last element in the path. if the path ends in a slash,
@@ -108,12 +103,11 @@ def move_dir(src, dst):
     """Moves the source directory INTO the destination"""
     if not os.path.isdir(src):
         raise OSError("Source path is not a directory: {}".format(src))
-    #print "mvd {} --> {}".format(src, dst)
     shutil.move(src, dst)
 
 def collect_terminal_empty_dirs(root, move_tuples):
-    """Returns a list of all empty directories.
-
+    """
+    Returns a list of all empty directories.    
        With a recursive argument it can be shown that a list of (full)
        paths to all empty directories is sufficient to reconstruct
        all recursively empty directories as well.
@@ -139,7 +133,7 @@ def collect_terminal_empty_dirs(root, move_tuples):
         for f in files:
             disk_state.append(os.path.join(norm_base, f))
 
-    disk_tree = _paths_to_tree(disk_state)
+    disk_tree = paths_to_tree(disk_state)
 
     def traverse(tree, parts, mkdir=False):
         """traverses parts and returns a (parent, name) tuple
@@ -216,7 +210,9 @@ def collect_terminal_empty_dirs(root, move_tuples):
 
 def remove_empty_dirs(path):
     """Recursively removes empty direcotries contained within path"""
-    for root, dirs, files in os.walk(path, topdown=False):
+
+    # apparently the next loop does not return... ever
+    for root, dirs, files in os.walk(path, topdown=False):  # pragma: no cover
         log.debug("[clean_empty.at] %s", path)
 
         # don't remove the source directory!
@@ -245,26 +241,26 @@ def _path_parts(path):
     # or the end
     return (_ for _ in parts if _)
 
-def _paths_to_tree(paths):
+def paths_to_tree(paths):
     """
-        Makes a directory tree from an iterable of file
-        or directory paths. If a path corresponds to a directory
-        it *MUST* end in the seperator of the filesystem
+    Create a dictionary structure representing a filesystem tree from paths.
+    Where `paths` is a list of file and directory paths. If a path ends in
+    in `os.path.sep` it is considerd a directory, else a file.
 
-        Examples
-        ---------
-        >>> _paths_to_tree(['/hello/there/'])
-        {'hello': {'there': {}}}
-        >>> _paths_to_tree(['/hello/there'])
-        {'hello': {'there': None}}
-        >>> _paths_to_tree(['/'])
-        {}
-        >>> _paths_to_tree([])
-        {}
-        >>> _paths_to_tree(set())
-        {}
-        >>> _paths_to_tree(['hello/cruel/world', 'hello/cruel/earth/africa'])
-        {'hello': {'cruel': {'world': None, 'earth': {'africa': None}}}}
+    Examples
+    ---------
+    >>> paths_to_tree(['/hello/there/'])
+    {'hello': {'there': {}}}
+    >>> paths_to_tree(['/hello/there'])
+    {'hello': {'there': None}}
+    >>> paths_to_tree(['/'])
+    {}
+    >>> paths_to_tree([])
+    {}
+    >>> paths_to_tree(set())
+    {}
+    >>> paths_to_tree(['hello/cruel/world', 'hello/cruel/earth/africa'])
+    {'hello': {'cruel': {'world': None, 'earth': {'africa': None}}}}
     """
 
     tree = {}

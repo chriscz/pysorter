@@ -7,13 +7,17 @@ import logging
 
 import os
 
-from .. import action
-from .. import filesystem as fs
-from .util import escape_singles
+from . import rules
+from . import filesystem as fs
 
 log = logging.getLogger(__name__)
 
-class PySorter(object):
+def escape_singles(string):
+    """escapes all single quotes in a string"""
+    return string.replace("'", r"\'")
+
+
+class Organizer(object):
     def __init__(self,
                  source_dir,
                  sort_rule,
@@ -26,7 +30,7 @@ class PySorter(object):
                  do_recurse=False,
                  do_remove_empty_dirs=False):
         """
-        Construct a new instance of PySorter for organizing some directory
+        Construct a new instance of Organizer for organizing some directory
         using certain parameters
 
         Parameters
@@ -34,8 +38,20 @@ class PySorter(object):
         source_dir: string
            path to the directory that must be organized
 
-        sort_rule: RuleSet
-            ruleset used to determine the sorting destinations of files
+        sort_rule: function(path: str) --> destination: {str, class}
+            Function that takes the path of an entity (file / directory) 
+            as only argument and returns the destination path where it should 
+            be moved to.
+            
+            If `path` ends in `/` then the path is a directory,
+            else it is a file.
+            
+            If the destination ends in `/` then the the entity will me moved *inside*
+            of the destination, otherwise the entity will be moved to *destination*.
+            
+            The function may also return or raise rules.Unhandled, rules.Skip or
+            rules.SkipRecurse.
+            
 
         no_process: set()
             names of toplevel directories that should not be traversed
@@ -76,7 +92,7 @@ class PySorter(object):
         self.no_process = no_process or set()
         self.no_recurse = set()
 
-        self.dry_run = dry_run
+        self.is_dry_run = dry_run
 
         self.do_remove_empty_dirs = do_remove_empty_dirs
         self.do_recurse = do_recurse
@@ -85,7 +101,7 @@ class PySorter(object):
         # --- variables used in a dry run
 
         # functions as an overlay of the destination directory,
-        # so that changes in the source may be reflected through it.
+        # so that changes in the source directory may be reflected through it.
 
         self.dry_src = set()
         self.dry_dst = set()
@@ -100,8 +116,8 @@ class PySorter(object):
         Invokes self.sortrule.destination, ensured that  Skip, SkipReturn or Unhandled
         are raised when the function returns them.
         """
-        retval = self.sort_rule.destination(path)
-        if retval in action.actionset:
+        retval = self.sort_rule(path)
+        if retval in rules.actions:
             raise retval()
         return retval
 
@@ -139,7 +155,7 @@ class PySorter(object):
                 del dirs[:]
 
         if self.do_remove_empty_dirs:
-            if self.dry_run:
+            if self.is_dry_run:
                 self.dry_rmdir = fs.collect_terminal_empty_dirs(self.path_source, self.dry_mv_tuples)
                 for path in self.dry_rmdir:
                     print("rmdir '{}'".format(escape_singles(path)))
@@ -169,24 +185,25 @@ class PySorter(object):
                 # the destination is absolute, file must go there
                 dst = fs.cjoin(raw_dst)
 
-        except action.Unhandled:
+        except rules.Unhandled:
             self.unhandled_paths.add(src)
             return
-        except action.Skip:
+        except rules.Skip:
             return
-        except action.SkipRecurse:
+        except rules.SkipRecurse:
             if src.endswith('/'):
                 # strip the trailing slash because the path will be compared
                 # with `dirs` returned by os.walk (which do not contain
                 # a trailing slash `/`)
                 self.no_recurse.add(src.rstrip('/'))
+            log.warning('SkipRecurse cannot be used with a file argument, Skip assumed: %s', src)
             return
 
         if os.path.exists(dst) or (dst in self.dry_dst):
             log.info("destination exists: `%s` --> `%s`", src, dst)
             return
 
-        if self.dry_run:
+        if self.is_dry_run:
             abs_src = os.path.join(self.path_source, src)
             self.dry_src.add(abs_src)
             self.dry_dst.add(dst)

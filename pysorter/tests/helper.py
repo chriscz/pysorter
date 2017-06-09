@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
-import os
-from .. import action
 
-import pytest
+import os
+
+from .. import rules
 
 
 def is_string(obj):
@@ -31,7 +31,8 @@ def initialize_dir(d, filetypes, paths_to_make):
 
     """
     # --- create a mapping file
-    d.write('filetypes.py', bytearray(mkfiletypesstr(filetypes), encoding="utf-8"))
+    if filetypes is not None:
+        d.write('filetypes.py', bytearray(mkfiletypesstr(filetypes), encoding="utf-8"))
 
     # --- create temp files
     for path in paths_to_make:
@@ -56,10 +57,10 @@ def mkfiletypesstr(mapping):
     import textwrap
     from io import StringIO
     s = StringIO()
-    s.write('from pysorter import action\n')
+    s.write('from pysorter import rules\n')
     # --- first dump any functions definitions
     for v in mapping.values():
-        if v in action.actionset:
+        if v in rules.actions:
             continue
         elif callable(v):
             source = textwrap.dedent(inspect.getsource(v))
@@ -76,8 +77,8 @@ def mkfiletypesstr(mapping):
     for k in mapping:
         value = mapping[k]
 
-        if value in action.actionset:
-            value = 'action.' + value.__name__
+        if value in rules.actions:
+            value = 'rules.' + value.__name__
         elif callable(value):
             value = v.__name__
         else:
@@ -86,7 +87,7 @@ def mkfiletypesstr(mapping):
         s.write('({}, {}),\n'.format(repr(k), value))
     s.write(']\n')
     s = s.getvalue()
-    #print s
+    # print s
     return s
 
 
