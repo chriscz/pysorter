@@ -325,7 +325,7 @@ def test_dry_run_with_directory_move(tempdir):
     assert set(should_be_removed) == rmdir_paths
 
 def test_skip_recurse_on_file_ok(tempdir):
-    tempdir.write('filetypes.py', "from pysorter.rules import SkipRecurse\nRULES = [('.*', SkipRecurse)]")
+    tempdir.write('filetypes.py', "from pysorter.rules import SkipRecurse\nRULES = [('.*', SkipRecurse)]", 'utf-8')
 
     src_dir = 'src/'
     dst_dir = 'dst/'
