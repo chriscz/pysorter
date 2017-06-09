@@ -38,7 +38,7 @@ given pattern.
 """
 # XXX Make sure all imports are absolute in this file, otherwise there will be
 # problems using exec in rules.py
-from pysorter import action
+from pysorter import rules
 
 import mimetypes
 import re
@@ -64,7 +64,7 @@ FILES_WITHOUT_EXTENSION = (r'(^|/)(?P<name>[^/]+)$', 'other/')
 
 
 def impossible(match, path):
-    raise RuntimeError("This pattern should never match a path: {}".format(path))
+    raise RuntimeError("This pattern should never match a path: {}".format(path)) # pragma: no cover
 
 
 RULES = [
@@ -189,8 +189,6 @@ RULES = [
     (r'\.aswcs$', 'avast/themes/'),
     (r'\.vcf$', 'contacts/'),
     (r'\.cer$', 'certificates/'),
-
-    DIRECTORIES,
 ]
 
 RULES.extend(MIMETYPE_FALLBACKS)

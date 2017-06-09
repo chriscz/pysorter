@@ -1,45 +1,47 @@
+"""
+Module for the base regex rule implementation
+"""
 from __future__ import print_function
 
 import logging
-
 import re
-
-from . import action
-from .core.util import is_string
 
 log = logging.getLogger(__name__)
 
-
-class BaseRule(object):
+# --------------------------------------------------------------------------
+# Actions
+# --------------------------------------------------------------------------
+class Unhandled(Exception):
     """
-    Base implementation that all sorting rules must extend.
+    Raised or returned when a path cannot be handled by the
+    function.
     """
 
-    def destination(self, path):
-        """
-        Process the given path. If path ends in a `/` it's a directory else it's a file.
-        This method can return an absolute or relative destination.
-
-        When a destination ends in `/` the item at the path will me moved *inside*
-        that destination, else the item will be moved to the location *at* destination.
-
-        Raises
-        ------
-        UnhandledPathException:
-            if the method cannot handle the given path
-
-        """
-        raise NotImplementedError()
-
-
-
-class RulesFileRule(BaseRule):
+class Skip(Exception):
     """
-    Default sorint implementation, uses the regex definitions as given in the filetypes.py specification file
+    Riased or returned when a path should be skipped from moving.
+    """
+
+class SkipRecurse(Exception):
+    """
+    Raised or returned when a directory path should not
+    be recursed into. 
+    
+    The directory itself may still be relocated though.
+    """
+
+actions = frozenset([Unhandled, Skip, SkipRecurse])
+
+
+class RulesFileClassifier(object):
+    """
+    Default rule implementation that 
+    uses the regex definitions as given in a `filetypes.py` specification file.
+    
     """
 
     def __init__(self, rules):
-        super(RulesFileRule, self).__init__()
+        super(RulesFileClassifier, self).__init__()
         self.rules = rules
 
     def first_match(self, finditer):
@@ -52,68 +54,94 @@ class RulesFileRule(BaseRule):
             match = self.first_match(R.finditer(path))
             if match:
                 return function(match, path)
-        raise action.Unhandled
+        raise Unhandled
 
     @classmethod
-    def load_from(cls, filepath):
+    def load_file(cls, path):
         """
-        Loads sorting rules from a text file
-
-        Parameters
-        ----------
-        filepath
-
-        Returns
-        -------
-        a RulesFileRule with all the sorting entries
-
+        Loads sorting rules from a text file and return 
+        a RulesFileClassifier containing all the sorting entries.
         """
         namespace = {'__builtins__': __builtins__}
-        with open(filepath, 'r') as f:
+        with open(path, 'r') as f:
             exec(f.read(), namespace)
 
         if 'RULES' not in namespace:
-            msg = "Configuration file missing RULES: {}".format(filepath)
+            msg = "Configuration file missing RULES: {}".format(path)
             raise RuntimeError(msg)
 
         rules = []
-        for item in namespace['RULES']:
-            item = list(item)
-            item[0] = re.compile(item[0])
-            if is_string(item[1]):
-                # XXX remove after debugging
-                item[1] = make_regex_rule_function(item[0], item[1])
-            elif item[1] in action.actionset:
-                item[1] = make_return_function(item[1])
-            elif callable(item[1]):
-                pass
+        for regex, destination in namespace['RULES']:
+            pattern = re.compile(regex)
+            matcher = None
+
+            if is_string(destination):
+                # destination --> format string
+                matcher = make_regex_rule_function(pattern, destination)
+            elif destination in actions:
+                # constant action ex. Skip
+                matcher = make_constant_function(destination)
+            elif callable(destination):
+                # custom processing_function(re_match, filepath)
+                matcher = destination
             else:
                 msg = "Unhandled type in rule list. " \
                       "Second item in pair must be " \
-                      "callable, string or action: " + repr(item[1])
-                raise RuntimeError(msg)
+                      "callable, string or action: " + repr(destination)
+                raise ValueError(msg)
 
-            rules.append(item)
+            rules.append((pattern, matcher))
 
         return cls(rules)
 
-def make_return_function(action):
-    def function(match, path):
+    def __call__(self, path):
+        return self.destination(path)
+
+
+def is_string(obj):
+    import sys
+
+    PY3 = sys.version_info[0] == 3
+
+    if PY3:
+        string_types = str,  # pragma: no cover
+    else:
+        string_types = basestring, str  # pragma: no cover
+    return isinstance(obj, string_types)
+
+
+def make_constant_function(action):
+    """Return a function that always returns `action`, regardless of its arguments"""
+
+    def function(*args):
         return action
+
     return function
+
 
 def make_regex_rule_function(pattern, dstfmt):
     """
-    Creates a new path processing function.
-    Does not support moving directories
+    Return a path processing function. 
     """
 
-    def process(match, path):
-        # FIXME only match against the filename
+    def process(re_match, path):
+        """
+        
+        Parameters
+        ----------
+        re_match: regex match
+        path: str
+            original path that was used to create `match`
+
+        Returns
+        -------
+
+        """
+        # FIXME only re_match against the filename
         try:
-            pargs = [match.group(0)] + list(match.groups())
+            pargs = [re_match.group(0)] + list(re_match.groups())
             destination = dstfmt.format(*pargs,
-                                        **match.groupdict())
+                                        **re_match.groupdict())
         except IndexError:
             raise ValueError("Destination string placeholders out of range: {}".format(dstfmt))
         except KeyError as e:

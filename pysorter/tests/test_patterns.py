@@ -1,12 +1,10 @@
 from __future__ import print_function
-import os
 
 import pytest
 
 from . import helper
-from ..core import pysorter
-from .. import action
-
+from .. import rules
+from .. import commandline
 
 
 def test_keyword_captures(tempdir):
@@ -25,9 +23,8 @@ def test_keyword_captures(tempdir):
     expected = [
         'cruel/',
         'cruel/hello.pdf']
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_numerical_captures(tempdir):
@@ -44,7 +41,7 @@ def test_numerical_captures(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = ['docs/',
@@ -53,7 +50,6 @@ def test_numerical_captures(tempdir):
                 'music/awesome/',
                 'music/awesome/song.mp3']
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_bad_keyword_captures(tempdir):
@@ -69,8 +65,7 @@ def test_bad_keyword_captures(tempdir):
     args = [to_sort, '-t', 'filetypes.py']
 
     with pytest.raises(ValueError):
-        pysorter.main(args)
-
+        commandline.main(args)
 
 
 def test_bad_numerical_capture(tempdir):
@@ -86,8 +81,7 @@ def test_bad_numerical_capture(tempdir):
     args = [to_sort, '-t', 'filetypes.py']
 
     with pytest.raises(ValueError):
-        pysorter.main(args)
-
+        commandline.main(args)
 
 
 def test_callable_as_action(tempdir):
@@ -106,14 +100,13 @@ def test_callable_as_action(tempdir):
 
     args = [to_sort, '-t', 'filetypes.py', '-d', dest]
 
-    pysorter.main(args)
+    commandline.main(args)
     # --- compare sorted
     expected = [
         'foobar/',
         'foobar/hello_cruel.pdf']
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=dest)
-
 
 
 def test_rule_behaviour_into_directory_for_file(tempdir):
@@ -132,9 +125,8 @@ def test_rule_behaviour_into_directory_for_file(tempdir):
     expected = [
         'pdf/',
         'pdf/hello_cruel.pdf']
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_rule_behaviour_to_for_file(tempdir):
@@ -152,9 +144,8 @@ def test_rule_behaviour_to_for_file(tempdir):
     # --- compare sorted
     expected = [
         'pdf']
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_rule_behaviour_into_directory_for_dir(tempdir):
@@ -173,9 +164,8 @@ def test_rule_behaviour_into_directory_for_dir(tempdir):
     expected = [
         'pdf/',
         'pdf/foo/']
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_rule_behaviour_to_for_dir(tempdir):
@@ -194,14 +184,13 @@ def test_rule_behaviour_to_for_dir(tempdir):
     expected = [
         'pdf/'
     ]
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_skip_pattern_file(tempdir):
     filetypes = {
-        '\.xml$': action.Skip,
+        '\.xml$': rules.Skip,
         '\.pdf$': 'pdf/'
     }
 
@@ -216,14 +205,13 @@ def test_skip_pattern_file(tempdir):
         'pdf/hello_cruel.pdf',
         'config.xml'
     ]
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)
-
 
 
 def test_skip_recurse_directory(tempdir):
     filetypes = {
-        'foo/$': action.SkipRecurse,
+        'foo/$': rules.SkipRecurse,
         '\.pdf$': 'pdf/'
     }
 
@@ -241,5 +229,5 @@ def test_skip_recurse_directory(tempdir):
         'foo/',
         'foo/docfoo.pdf'
     ]
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=expected, path=to_sort)

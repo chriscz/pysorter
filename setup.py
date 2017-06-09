@@ -11,7 +11,7 @@ setup(
     version=read_version(),
     description='A regex based file organizer',
     long_description=open(os.path.join(base_dir, 'description.txt')).read().strip(),
-    license='GPL',
+    license='MPL',
     url='https://github.com/chriscz/pySorter',
 
     author='Chris Coetzee',
@@ -34,15 +34,16 @@ setup(
         "console_scripts": ['pysorter=pysorter.core.pysorter:main']
     },
     extras_require=dict(
-        build=['twine', 'wheel', 'setuptools-git'],
+        build=['twine', 'wheel', 'setuptools-git', 'sphinx'],
         test=['pytest', 'testfixtures', 'pytest-cov'],
     ),
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Topic :: Utilities",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
     ]
 )
