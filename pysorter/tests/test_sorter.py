@@ -1,8 +1,9 @@
 from __future__ import print_function
+
 import os
 
 from . import helper
-from ..core import pysorter
+from .. import commandline
 
 
 def test_sort_only_filetypes_arg(tempdir):
@@ -17,7 +18,7 @@ def test_sort_only_filetypes_arg(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = ['docs/',
@@ -41,7 +42,7 @@ def test_recursive_sort(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '--filetypes', 'filetypes.py']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = ['foo/',
@@ -73,7 +74,7 @@ def test_recursive_sort_with_directory_processing(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '--filetypes', 'filetypes.py', '--process-dirs']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = ['foo/',
@@ -105,7 +106,7 @@ def test_clean_empty(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '-r', '-c', '--filetypes', 'filetypes.py']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = ['docs/',
@@ -130,7 +131,7 @@ def test_duplicate_recursive(tempdir):
     helper.initialize_dir(tempdir, filetypes, to_make)
 
     args = [to_sort, '-r', '--filetypes', 'filetypes.py']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = [
@@ -155,7 +156,7 @@ def test_process_dirs_no_rules(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py', '--process-dirs']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = [] + helper.build_path_tree(to_make)
@@ -164,7 +165,7 @@ def test_process_dirs_no_rules(tempdir):
 
 def test_print_version(capsys):
     try:
-        pysorter.main(['--version'])
+        commandline.main(['--version'])
         assert False, 'did not print out version.'
     except SystemExit:
         out, err = capsys.readouterr()
@@ -193,7 +194,7 @@ def test_write_unknown_types_correct(tempdir):
 
     # --- compare sorted
     args = [to_sort, '-u', unknown, '--filetypes', 'filetypes.py']
-    pysorter.main(args)
+    commandline.main(args)
 
     data = set(_ for _ in tempdir.read(unknown, encoding="utf8").split('\n') if _)
 
@@ -213,7 +214,7 @@ def test_absolute_path(tempdir):
     helper.initialize_dir(tempdir, filetypes, helper.build_path_tree(to_make, to_sort))
 
     args = [to_sort, '--filetypes', 'filetypes.py', '--process-dirs']
-    pysorter.main(args)
+    commandline.main(args)
 
     # --- compare sorted
     expected = helper.build_path_tree(to_make, 'docs/') + ['docs/']
@@ -243,17 +244,17 @@ def test_dry_run_has_no_effect(tempdir):
 
     args = [os.path.join(tempdir.path, src_dir), '-nrc', '-d', dst_dir, '-t', 'filetypes.py']
 
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=root_tree, path='.')
 
     # --- strip the common prefix from all the move (src, dst) pairs
     move_pairs = set()
     common = len(tempdir.path) + 1  # for the seperator
-    for (src, dst) in pysorter._last_sorter.dry_mv_tuples:
+    for (src, dst) in commandline._last_sorter.dry_mv_tuples:
         move_pairs.add((src[common:], dst[common:]))
 
     rmdir_paths = set()
-    for path in pysorter._last_sorter.dry_rmdir:
+    for path in commandline._last_sorter.dry_rmdir:
         rmdir_paths.add(path[common:])
 
     assert len(move_pairs) == 2
@@ -264,9 +265,8 @@ def test_dry_run_has_no_effect(tempdir):
     assert 'src/an/empty/dir' in rmdir_paths
     assert 'src/an/empty' in rmdir_paths
     assert 'src/an' in rmdir_paths
-    assert 'src/another'in rmdir_paths
+    assert 'src/another' in rmdir_paths
     assert len(rmdir_paths) == 5
-
 
 
 def test_dry_run_with_directory_move(tempdir):
@@ -293,17 +293,17 @@ def test_dry_run_with_directory_move(tempdir):
 
     args = [os.path.join(tempdir.path, src_dir), '-nrcp', '-d', dst_dir, '-t', 'filetypes.py']
 
-    pysorter.main(args)
+    commandline.main(args)
     tempdir.compare(expected=root_tree, path='.')
 
     # --- strip the common prefix from all the move (src, dst) pairs
     move_pairs = set()
     common = len(tempdir.path) + 1  # for the seperator
-    for (src, dst) in pysorter._last_sorter.dry_mv_tuples:
+    for (src, dst) in commandline._last_sorter.dry_mv_tuples:
         move_pairs.add((src[common:], dst[common:]))
 
     rmdir_paths = set()
-    for path in pysorter._last_sorter.dry_rmdir:
+    for path in commandline._last_sorter.dry_rmdir:
         rmdir_paths.add(path[common:])
 
     assert len(move_pairs) == 5
@@ -324,3 +324,22 @@ def test_dry_run_with_directory_move(tempdir):
 
     assert set(should_be_removed) == rmdir_paths
 
+def test_skip_recurse_on_file_ok(tempdir):
+    tempdir.write('filetypes.py', "from pysorter.rules import SkipRecurse\nRULES = [('.*', SkipRecurse)]")
+
+    src_dir = 'src/'
+    dst_dir = 'dst/'
+
+    to_make = ['story.pdf']
+
+    src_tree = helper.build_path_tree(to_make, src_dir)
+
+    helper.initialize_dir(tempdir, None, src_tree)
+    tempdir.makedir(dst_dir)
+
+    args = [os.path.join(tempdir.path, src_dir), '-d', dst_dir, '-t', 'filetypes.py']
+
+    commandline.main(args)
+
+    root_tree = src_tree + [dst_dir, 'filetypes.py', src_dir]
+    tempdir.compare(expected=root_tree, path='.')

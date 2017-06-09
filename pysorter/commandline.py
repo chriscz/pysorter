@@ -9,14 +9,18 @@ import logging
 import os
 import sys
 
-from . import util
-from .sorter import PySorter
+from .oranize import Organizer
 
-from ..rules import RulesFileRule
+from .rules import RulesFileClassifier
 
 log = logging.getLogger(__name__)
 
-_last_sorter = None  # variable used during testing
+_last_sorter = None  # variable used during testing, set by main
+
+
+def package_directory():
+    """Return the absolute path to where pysorter is located"""
+    return os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__))))
 
 def validate_arguments(args):
     """
@@ -27,7 +31,7 @@ def validate_arguments(args):
     if args.filetypes:
         args.filetypes = os.path.abspath(args.filetypes)
     else:
-        args.filetypes = os.path.join(util.script_directory(), 'filetypes.py')
+        args.filetypes = os.path.join(package_directory(), 'filetypes.py')
 
     if not os.path.isfile(args.filetypes):
         raise OSError("Filetypes is not a file or does not exist: {}".format(args.filetypes))
@@ -40,7 +44,7 @@ def validate_arguments(args):
 
 def parse_args(args=None):
     """Create an argument parser"""
-    from .. import __version__
+    from . import __version__
     parser = argparse.ArgumentParser(description='Reorganizes files and directories according to certain rules')
 
     parser.add_argument('directory',
@@ -92,7 +96,7 @@ def main(args=None):
     logging.basicConfig()
     args = parse_args(args)
 
-    rules = RulesFileRule.load_from(args.filetypes)
+    rules = RulesFileClassifier.load_file(args.filetypes)
 
     topass = dict(vars(args))
 
@@ -101,17 +105,19 @@ def main(args=None):
     del topass['filetypes']
     del topass['unhandled_file']
 
-    sorter = PySorter(args.directory, rules, **topass)
+    sorter = Organizer(args.directory, rules, **topass)
     sorter.organize()
 
     _last_sorter = sorter
 
     # write out all the unknown file types
     if args.unhandled_file:
-        util.write_unknown(sorter.unhandled_paths, args.unhandled_file)
+        with open(args.unhandled_file, 'a') as ufile:
+            for i in sorter.unhandled_paths:
+                ufile.write(i)
+                ufile.write('\n')
     return 0
 
 if __name__ == "__main__":
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    # sys.argv = ['pySorter.py', '/tmp/test/','-t', '/home/chris/Development/soft_dev/pySorter/pysorter/filetypes.txt', '-r', '-c']
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     sys.exit(main())

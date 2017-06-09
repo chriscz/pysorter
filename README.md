@@ -14,7 +14,7 @@ As stated in the python documentation, the shutil library may not copy all file 
 This will not affect the content of your files, however
 
 ## Quick Start
-  * `pip install pysorter`
+ o * `pip install pysorter`
   * `pysorter`
 
 ## Requirements
@@ -24,5 +24,7 @@ Python version:
  * 3.4
  * 3.5
 
+
 ## Contributing
 See the [guide](CONTRIBUTING.md).
+
