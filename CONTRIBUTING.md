@@ -11,17 +11,10 @@ begin hacking!
 ## Setting up your environment
 1. Fork the repository, and clone it to your  machine.
 2. Create a virtual environment using one of the supported Python versions. 
-Here are *three* example commands:
-
+   Here are *three* example commands:
     ```
     python2 -m virtualenv venv
-    ```
-or
-    ```
     python3 -m virtualenv venv
-    ```
-or
-    ```
     virtualenv venv
     ```
 3. Activate the virtual environment:
@@ -30,11 +23,11 @@ or
     ```
 4. To ease development and testing, you can install pysorter as [editable][editable]. 
    `cd` into `pysorter/` and exexute the following
-```
+    ```
     pip install -e .
     pip install -e .[test]
     pip install -e .[develop]
-```
+    ```
 
 ### Developing
 1. Activate your virtual environment
