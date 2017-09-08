@@ -90,7 +90,7 @@ functionality. To break it down.
 You can look at the `pysorter.filetypes` module for some more inspiration.
 
 ## Caveats
-The [Python shutil library][https://docs.python.org/3/library/shutil.html] used by pysorter carries the following warning:
+The [Python shutil library](https://docs.python.org/3/library/shutil.html) used by pysorter carries the following warning:
 
 ```
 Warning 
