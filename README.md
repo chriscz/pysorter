@@ -5,13 +5,6 @@
 
 A Commandline utility for organizing files and directories according to regex patterns.
 
-Here's an example of rules for moving files:
-
-
-
-As stated in the python documentation, the shutil library may not copy all file metadata.
-This will not affect the content of your files, however
-
 ## Quick Start
   * `pip install pysorter`
   * `pysorter`
@@ -46,7 +39,7 @@ optional arguments:
 ```
 
 ## Configuration
-Pysorter is shipped with a default rules file that has entries for many common 
+Pysorter ships with a default rules file that has entries for many common 
 file types. As a user of pysorter, you are encouraged to add your own rules
 using `pysorter/filetypes.py` file for inspiration.
 
@@ -95,6 +88,26 @@ functionality. To break it down.
    groups.
 
 You can look at the `pysorter.filetypes` module for some more inspiration.
+
+## Caveats
+The [Python shutil library][https://docs.python.org/3/library/shutil.html] used by pysorter carries the following warning:
+
+```
+Warning 
+Even the higher-level file copying functions (shutil.copy(), shutil.copy2()) cannot copy all file metadata.
+
+- On POSIX platforms, this means that file owner and group are lost as well as ACLs. 
+- On Mac OS, the resource fork and other metadata are not used. 
+  This means that resources will be lost and file type and 
+  creator codes will not be correct. 
+- On Windows, file owners, ACLs and alternate data streams are not copied.
+```
+
+If the files are on the same filesystem, then neither `copy` nor `copy2` are actually used,
+so there shouldn't be *any* risks involved. 
+
+If you still feel unsure, feel free to [create an issue](https://github.com/chriscz/pysorter/issues/new),
+and we'll try our best to help. 
 
 ## Requirements
 Python version:
