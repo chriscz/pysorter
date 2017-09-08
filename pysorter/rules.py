@@ -59,12 +59,16 @@ class RulesFileClassifier(object):
     @classmethod
     def load_file(cls, path):
         """
-        Loads sorting rules from a text file and return 
+        Load sorting rules from a text file (or module) and return 
         a RulesFileClassifier containing all the sorting entries.
         """
-        namespace = {'__builtins__': __builtins__}
-        with open(path, 'r') as f:
-            exec(f.read(), namespace)
+        # try loading as a module 
+        try:
+            namespace = __import__(path)
+        except ImportError:
+            namespace = {'__builtins__': __builtins__}
+            with open(path, 'r') as f:
+                exec (f.read(), namespace)
 
         if 'RULES' not in namespace:
             msg = "Configuration file missing RULES: {}".format(path)
@@ -143,7 +147,8 @@ def make_regex_rule_function(pattern, dstfmt):
             destination = dstfmt.format(*pargs,
                                         **re_match.groupdict())
         except IndexError:
-            raise ValueError("Destination string placeholders out of range: {}".format(dstfmt))
+            msg = "Destination string placeholders out of range: {}"
+            raise ValueError(msg.format(dstfmt))
         except KeyError as e:
             msg = "Destination string placeholder " \
                   "unknown key {}: {}".format(repr(e.args[0]), dstfmt)

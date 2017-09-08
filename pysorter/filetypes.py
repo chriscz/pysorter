@@ -12,19 +12,19 @@ given pattern.
         - file1.pdf
 
     Consider the following rules and corresponding behaviour
-        - RULE:      ('.*\.pdf', 'pdfs/')
+        - RULE:      (r'.*\.pdf', 'pdfs/')
           BEHAVIOUR: file1.pdf --> pdfs/file1.pdf
 
-        - RULE:      ('.*\.pdf', 'pdfs')
+        - RULE:      (r'.*\.pdf', 'pdfs')
           BEHAVIOUR: file1.pdf --> pdfs
 
     This applies similarly to directories
 
     More Examples:
         - Use predefined actions:
-          - RULE:      (r'file1\.pdf', action.Skip)
+          - RULE:      (r'file1\.pdf', rules.Skip)
           BEHAVIOUR: file1.pdf --> No action
-          - RULE:      (r'/pdfs/', action.SkipRecure)
+          - RULE:      (r'/pdfs/', rules.SkipRecure)
           BEHAVIOUR: /pdfs/file1.pdf --> No action
           BEHAVIOUR: /pdfs/another/file1.pdf --> No action
         - Numerical matching group
@@ -33,8 +33,6 @@ given pattern.
         - Named matching group
           - RULE:      (r'^(?P<year>\d{4})-(?P<month>\d{2})-.+?\.jpg$', 'images/{year}/{month}')
           BEHAVIOUR: 2016-03-12 13.34.21.jpg --> images/2016/03/2016-03-12 13.34.21.jpg
-
-
 """
 # XXX Make sure all imports are absolute in this file, otherwise there will be
 # problems using exec in rules.py

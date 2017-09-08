@@ -61,7 +61,7 @@ def parse_args(args=None):
                         dest='do_process_dirs')
 
     parser.add_argument('-t', '--filetypes',
-                        help='File containing regex rules [Default: filetypes.py]',
+                        help='File path or python module containing regex rules [Default: pysorter.filetypes]',
                         default=None)
 
     parser.add_argument('-u', '--unhandled-file',
@@ -108,6 +108,7 @@ def main(args=None):
     sorter = Organizer(args.directory, rules, **topass)
     sorter.organize()
 
+    # variable used for testing and debugging
     _last_sorter = sorter
 
     # write out all the unknown file types
