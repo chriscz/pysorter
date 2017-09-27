@@ -148,6 +148,7 @@ RULES = [
     (r'\.(?i)pdf$', 'documents/pdf/'),
     (r'\.(?i)xps$', 'documents/xps/'),
     (r'\.(?i)msg$', 'documents/email/outlook/'),
+    (r'\.(?i)cbr$', 'documents/comic/'),
     (r'\.(?i)msi$', 'installers/microsoft/'),
     (r'\.(?i)deb$', 'installers/debian/'),
     (r'\.(?i)exe$', 'installers/microsoft/'),
