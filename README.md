@@ -113,7 +113,6 @@ and we'll try our best to help.
 
 ## Requirements
 Python version:
- * 2.7
  * 3.3
  * 3.4
  * 3.5

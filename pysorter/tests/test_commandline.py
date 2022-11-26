@@ -10,7 +10,7 @@ def test_help_option():
     try:
         env = {'PYTHONPATH': basedir}
         output = subprocess.check_output(
-                    ['python', '-m', 'pysorter', '--help'],
+                    ['python3', '-m', 'pysorter', '--help'],
                     stderr=subprocess.STDOUT,
                     env=env
         )

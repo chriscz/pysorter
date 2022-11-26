@@ -41,7 +41,7 @@ class RulesFileClassifier(object):
     """
 
     def __init__(self, rules):
-        super(RulesFileClassifier, self).__init__()
+        super().__init__()
         self.rules = rules
 
     def first_match(self, finditer):
@@ -103,15 +103,7 @@ class RulesFileClassifier(object):
 
 
 def is_string(obj):
-    import sys
-
-    PY3 = sys.version_info[0] == 3
-
-    if PY3:
-        string_types = str,  # pragma: no cover
-    else:
-        string_types = basestring, str  # pragma: no cover
-    return isinstance(obj, string_types)
+    return isinstance(obj, str)
 
 
 def make_constant_function(action):
