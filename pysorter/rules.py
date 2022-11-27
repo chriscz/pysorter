@@ -17,27 +17,30 @@ class Unhandled(Exception):
     function.
     """
 
+
 class Skip(Exception):
     """
     Riased or returned when a path should be skipped from moving.
     """
 
+
 class SkipRecurse(Exception):
     """
     Raised or returned when a directory path should not
-    be recursed into. 
-    
+    be recursed into.
+
     The directory itself may still be relocated though.
     """
+
 
 actions = frozenset([Unhandled, Skip, SkipRecurse])
 
 
 class RulesFileClassifier(object):
     """
-    Default rule implementation that 
+    Default rule implementation that
     uses the regex definitions as given in a `filetypes.py` specification file.
-    
+
     """
 
     def __init__(self, rules):
@@ -59,23 +62,23 @@ class RulesFileClassifier(object):
     @classmethod
     def load_file(cls, path):
         """
-        Load sorting rules from a text file (or module) and return 
+        Load sorting rules from a text file (or module) and return
         a RulesFileClassifier containing all the sorting entries.
         """
-        # try loading as a module 
+        # try loading as a module
         try:
             namespace = __import__(path)
         except ImportError:
-            namespace = {'__builtins__': __builtins__}
-            with open(path, 'r') as f:
-                exec (f.read(), namespace)
+            namespace = {"__builtins__": __builtins__}
+            with open(path, "r") as f:
+                exec(f.read(), namespace)
 
-        if 'RULES' not in namespace:
+        if "RULES" not in namespace:
             msg = "Configuration file missing RULES: {}".format(path)
             raise RuntimeError(msg)
 
         rules = []
-        for regex, destination in namespace['RULES']:
+        for regex, destination in namespace["RULES"]:
             pattern = re.compile(regex)
             matcher = None
 
@@ -89,9 +92,11 @@ class RulesFileClassifier(object):
                 # custom processing_function(re_match, filepath)
                 matcher = destination
             else:
-                msg = "Unhandled type in rule list. " \
-                      "Second item in pair must be " \
-                      "callable, string or action: " + repr(destination)
+                msg = (
+                    "Unhandled type in rule list. "
+                    "Second item in pair must be "
+                    "callable, string or action: " + repr(destination)
+                )
                 raise ValueError(msg)
 
             rules.append((pattern, matcher))
@@ -117,12 +122,12 @@ def make_constant_function(action):
 
 def make_regex_rule_function(pattern, dstfmt):
     """
-    Return a path processing function. 
+    Return a path processing function.
     """
 
     def process(re_match, path):
         """
-        
+
         Parameters
         ----------
         re_match: regex match
@@ -136,14 +141,14 @@ def make_regex_rule_function(pattern, dstfmt):
         # FIXME only re_match against the filename
         try:
             pargs = [re_match.group(0)] + list(re_match.groups())
-            destination = dstfmt.format(*pargs,
-                                        **re_match.groupdict())
+            destination = dstfmt.format(*pargs, **re_match.groupdict())
         except IndexError:
             msg = "Destination string placeholders out of range: {}"
             raise ValueError(msg.format(dstfmt))
         except KeyError as e:
-            msg = "Destination string placeholder " \
-                  "unknown key {}: {}".format(repr(e.args[0]), dstfmt)
+            msg = "Destination string placeholder " "unknown key {}: {}".format(
+                repr(e.args[0]), dstfmt
+            )
             raise ValueError(msg)
         log.debug("process: RE[%s](%s) --> %s", pattern.pattern, path, destination)
         return destination
