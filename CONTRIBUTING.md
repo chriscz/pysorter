@@ -11,11 +11,8 @@ begin hacking!
 ## Setting up your environment
 1. Fork the repository, and clone it to your  machine.
 2. Create a virtual environment using one of the supported Python versions. 
-   Here are *three* example commands:
     ```
-    python2 -m virtualenv venv
-    python3 -m virtualenv venv
-    virtualenv venv
+    python3 -m venv venv
     ```
 3. Activate the virtual environment:
     ```
@@ -38,11 +35,11 @@ git checkout -b issue_78 develop
 3. Write some code
 4. Write some tests and run them
 ```
-python setup.py test 
+python3 setup.py test 
 ```
 5. Check your coverage
 ```
-python setup.py coverage
+python3 setup.py coverage
 # open the coverage_report/index.html in your browser
 ```
 6. Commit your changes and push them up (many smaller commits are better than one big one) 
