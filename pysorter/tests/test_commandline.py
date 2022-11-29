@@ -8,13 +8,11 @@ def test_help_option():
     os.chdir(basedir)
 
     try:
-        env = {'PYTHONPATH': basedir}
+        env = {"PYTHONPATH": basedir}
         output = subprocess.check_output(
-                    ['python', '-m', 'pysorter', '--help'],
-                    stderr=subprocess.STDOUT,
-                    env=env
+            ["python3", "-m", "pysorter", "--help"], stderr=subprocess.STDOUT, env=env
         )
     except subprocess.CalledProcessError as e:
         output = e.output
 
-    assert '-d DEST_DIR' in output.decode('utf-8')
+    assert "-d DEST_DIR" in output.decode("utf-8")
